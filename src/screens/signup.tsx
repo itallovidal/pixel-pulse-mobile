@@ -1,8 +1,7 @@
 import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme} from 'native-base'
 import {ImageBackground} from 'react-native';
 import React from 'react'
-
-import RNPickerSelect from 'react-native-picker-select';
+import SelectDropdown from 'react-native-select-dropdown'
 
 import placeholder from '../assets/fotoplaceholder.png'
 import {LinearGradient} from "expo-linear-gradient";
@@ -32,7 +31,7 @@ const schema = z.object({
         message: "Senha deve conter mais de 8 caracteres."
     }),
     favoriteGen1: z.enum(genres),
-    favorteGen2: z.enum(genres),
+    favoriteGen2: z.enum(genres),
 
     gamesLife: z.string().min(4)
 })
@@ -41,8 +40,13 @@ interface ISchema extends z.infer<typeof schema>{}
 
 function Signup(){
     const navigation = useNavigation<TAuthRouteNavigatorProps>()
-    const {control} = useForm<ISchema>()
+    const {control, handleSubmit, setValue, formState: {errors}} = useForm<ISchema>()
     const theme = useTheme()
+
+
+    function signup(data : ISchema){
+        console.log(data)
+    }
 
     return (
 
@@ -94,12 +98,16 @@ function Signup(){
                                     />
                                 )} />
 
+                    {
+                        errors.email?.message && <Text mb={8} color={"white"}>{errors?.email?.message}</Text>
+                    }
+
                     <Text color={"white"} mb={2} fontSize={16}> Senha </Text>
 
                     <Controller control={control}
-                                name={"email"}
+                                name={"password"}
                                 render={({field: {onChange, onBlur, value}})=> (
-                                    <Input placeholder={"*******"} secureTextEntry={true}
+                                    <Input placeholder={"*******"} secureTextEntry={false}
                                            bg={"gray.400"}
                                            color={"white"}
                                            borderWidth={0}
@@ -112,13 +120,16 @@ function Signup(){
                                     />
                                 )} />
 
+                    {
+                        errors.password?.message && <Text mb={8} color={"white"}>{errors?.password?.message}</Text>
+                    }
 
                     <Text color={"white"} my={2} fontSize={16}> Confirme a senha </Text>
 
                     <Controller control={control}
                                 name={"passwordConfirmation"}
                                 render={({field: {onChange, onBlur, value}})=> (
-                                    <Input placeholder={"*******"} secureTextEntry={true}
+                                    <Input placeholder={"*******"} secureTextEntry={false}
                                            bg={"gray.400"}
                                            color={"white"}
                                            borderWidth={0}
@@ -131,42 +142,72 @@ function Signup(){
                                     />
                                 )} />
 
+                    {
+                        errors.passwordConfirmation?.message && <Text mb={8} color={"white"}>{errors?.passwordConfirmation?.message}</Text>
+                    }
+
                     <Text color={"white"} mt={4} mb={2} fontSize={16}> Gêneros Favoritos </Text>
-                    {/*<Input placeholder={"FPS"}*/}
-                    {/*       mb={4}*/}
-                    {/*       bg={"gray.400"}*/}
-                    {/*       color={"white"}*/}
-                    {/*       borderWidth={0}*/}
-                    {/*       _focus={{*/}
-                    {/*           bgColor: "gray.600"*/}
-                    {/*       }}*/}
-                    {/*/>*/}
 
-                    {/*<Input placeholder={"RPG"}*/}
-                    {/*       mb={4}*/}
-                    {/*       bg={"gray.400"}*/}
-                    {/*       color={"white"}*/}
-                    {/*       borderWidth={0}*/}
-                    {/*       _focus={{*/}
-                    {/*           bgColor: "gray.600"*/}
-                    {/*       }}*/}
-                    {/*/>*/}
-
-                    <RNPickerSelect
-                        placeholder={"Escolha seu gênero"}
-                        style={{inputAndroid: {
-                                color: 'white',
-                                backgroundColor: theme.colors["gray"]["400"],
-                                borderRadius: 5
-                            }
+                    <SelectDropdown
+                        data={['RPG', 'FPS']}
+                        buttonStyle={{
+                            backgroundColor: theme.colors["gray"]["400"],
+                            borderRadius: 4,
+                            width: "100%",
+                            marginBottom: 8
                         }}
-                        onValueChange={(value) => console.log("")}
-                        items={[
-                            { label: 'Football', value: 'football' },
-                            { label: 'Baseball', value: 'baseball' },
-                            { label: 'Hockey', value: 'hockey' },
-                        ]}
+                        buttonTextStyle={{color: "white"}}
+                        dropdownStyle={{
+                            marginTop: -50,
+                            backgroundColor: 'white',
+                            borderRadius: 4
+                        }}
+                        defaultButtonText={'Selecione o gênero.'}
+                        onSelect={(selectedItem, index) => {
+                            setValue('favoriteGen1', selectedItem)
+                            console.log(selectedItem, index)
+                        }}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem
+                        }}
+                        rowTextForSelection={(item, index) => {
+                            return item
+                        }}
                     />
+
+                    <SelectDropdown
+                        data={['RPG', 'FPS']}
+                        buttonStyle={{
+                            backgroundColor: theme.colors["gray"]["400"],
+                            borderRadius: 4,
+                            width: "100%"
+                        }}
+                        buttonTextStyle={{color: "white"}}
+                        dropdownStyle={{
+                            marginTop: -50,
+                            backgroundColor: 'white',
+                            borderRadius: 4
+                        }}
+                        defaultButtonText={'Selecione o gênero.'}
+                        onSelect={(selectedItem, index) => {
+                            setValue('favoriteGen2', selectedItem)
+                            console.log(selectedItem, index)
+                        }}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem
+                        }}
+                        rowTextForSelection={(item, index) => {
+                            return item
+                        }}
+                    />
+
+                    {
+                        errors.favoriteGen1?.message && <Text mb={8} color={"white"}>{errors?.favoriteGen1?.message}</Text>
+                    }
+
+                    {
+                        errors.favoriteGen2?.message && <Text mb={8} color={"white"}>{errors?.favoriteGen2?.message}</Text>
+                    }
 
                     <Text color={"white"} mt={4} mb={2} fontSize={16}> Jogo da Vida </Text>
                     <Controller control={control}
@@ -186,13 +227,18 @@ function Signup(){
                                     />
                                 )} />
 
+                    {
+                        errors.gamesLife?.message && <Text mb={8} color={"white"}>{errors?.gamesLife?.message}</Text>
+                    }
 
                     <Center>
                         <Button _pressed={{
                                      bg: "red.500"
                                 }} bg={"white"}
                                 mt={4}
-                                w={"60%"}>
+                                w={"60%"}
+                                onPress={handleSubmit(signup)}
+                        >
 
                             <Text color={"gray.700"}>Registrar</Text>
                         </Button>
