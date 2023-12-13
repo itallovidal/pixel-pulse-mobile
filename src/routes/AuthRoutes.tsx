@@ -21,7 +21,6 @@ function AuthRoutes() {
                     component={Signup}
             />
 
-
         </Navigator>
 
     );

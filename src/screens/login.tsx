@@ -1,4 +1,4 @@
-import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView} from 'native-base'
+import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme} from 'native-base'
 import {ImageBackground} from 'react-native';
 import React from 'react'
 
@@ -12,7 +12,9 @@ import {TAuthRouteNavigatorProps} from "../routes/RouteTypes";
 
 
 const schema = z.object({
-    email: z.string().min(5, {
+    email: z.string({
+        required_error: "Digite o email, por favor."
+    }).min(5, {
         message: "Email deve conter mais de 5 caracteres."
     }).email({
         message: "Email inválido!"
@@ -32,6 +34,8 @@ function Login(){
     })
     const navigation = useNavigation<TAuthRouteNavigatorProps>()
 
+    const theme = useTheme()
+
 
     function login({password, email} : ISchema){
         console.log(email)
@@ -49,7 +53,7 @@ function Login(){
                         source={placeholder}>
 
                         <LinearGradient
-                            colors={['rgba(0,0,0,0)', '#121214']}
+                            colors={['rgba(0,0,0,0)', theme.colors['gray']['400']]}
                             style={{height : '100%', width : '100%'}}/>
 
                     </ImageBackground>
@@ -82,7 +86,7 @@ function Login(){
                                     )} />
 
                     {
-                        errors.email?.message && <Text mb={8} color={"white"}>{errors?.email?.message}</Text>
+                        errors.email?.message && <Text mb={8} color={"red.500"}>{errors?.email?.message}</Text>
                     }
 
 
@@ -110,7 +114,7 @@ function Login(){
 
 
                     {
-                        errors.password?.message && <Text mb={8} color={"white"}>{errors?.password?.message}</Text>
+                        errors.password?.message && <Text mb={8} color={"red.500"}>{errors?.password?.message}</Text>
                     }
 
 

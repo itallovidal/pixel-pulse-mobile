@@ -43,6 +43,23 @@ const schema = z.object({
     gamesLife: z.string({
         required_error: "Qual jogo mais te marcou?"
     }).min(4)
+}).refine(({password, passwordConfirmation})=>{
+    if(password === passwordConfirmation){
+        return true
+    }
+    return false
+}, {
+    message: "Senhas não coincidem",
+    path: ['passwordConfirmation']
+}).refine(({favoriteGen1, favoriteGen2})=>{
+    if(favoriteGen1 === favoriteGen2){
+        return false
+    }
+
+    return true
+}, {
+    message: "Os gêneros não podem ser iguais!",
+    path: ['favoriteGen2']
 })
 
 interface ISchema extends z.infer<typeof schema>{}
@@ -70,7 +87,7 @@ function Signup(){
                         source={placeholder}>
 
                         <LinearGradient
-                            colors={['rgba(0,0,0,0)', '#121214']}
+                            colors={['rgba(0,0,0,0)', theme.colors['gray']['400']]}
                             style={{height : '100%', width : '100%'}}/>
 
                     </ImageBackground>
@@ -110,7 +127,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.email?.message && <Text mb={8} color={"white"}>{errors?.email?.message}</Text>
+                        errors.email?.message && <Text mb={8} color={"red.500"}>{errors?.email?.message}</Text>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Senha </Text>
@@ -133,7 +150,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.password?.message && <Text mb={8} color={"white"}>{errors?.password?.message}</Text>
+                        errors.password?.message && <Text mb={8} color={"red.500"}>{errors?.password?.message}</Text>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Confirme a senha </Text>
@@ -156,7 +173,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.passwordConfirmation?.message && <Text mb={8} color={"white"}>{errors?.passwordConfirmation?.message}</Text>
+                        errors.passwordConfirmation?.message && <Text mb={8} color={"red.500"}>{errors?.passwordConfirmation?.message}</Text>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Gêneros Favoritos </Text>
@@ -177,7 +194,10 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGen1', selectedItem)
+                            setValue('favoriteGen1', selectedItem, {
+                                shouldDirty: true,
+                                shouldValidate: true
+                            })
                             console.log(selectedItem, index)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
@@ -204,7 +224,10 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGen2', selectedItem)
+                            setValue('favoriteGen2', selectedItem, {
+                                shouldDirty: true,
+                                shouldValidate: true
+                            })
                             console.log(selectedItem, index)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
@@ -216,11 +239,11 @@ function Signup(){
                     />
 
                     {
-                        errors.favoriteGen1?.message && <Text mb={8} color={"white"}>{errors?.favoriteGen1?.message}</Text>
+                        errors.favoriteGen1?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGen1?.message}</Text>
                     }
 
                     {
-                        errors.favoriteGen2?.message && <Text mb={8} color={"white"}>{errors?.favoriteGen2?.message}</Text>
+                        errors.favoriteGen2?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGen2?.message}</Text>
                     }
 
                     <Text color={"white"} mt={4} mb={2} fontSize={16}> Jogo da Vida </Text>
@@ -242,7 +265,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.gamesLife?.message && <Text mb={8} color={"white"}>{errors?.gamesLife?.message}</Text>
+                        errors.gamesLife?.message && <Text mb={8} color={"red.500"}>{errors?.gamesLife?.message}</Text>
                     }
 
                     <Center>
