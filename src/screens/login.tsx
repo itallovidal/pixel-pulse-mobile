@@ -110,7 +110,7 @@ function Login(){
 
 
                     {
-                        errors.email?.message && <Text mb={8} color={"white"}>{errors?.password?.message}</Text>
+                        errors.password?.message && <Text mb={8} color={"white"}>{errors?.password?.message}</Text>
                     }
 
 
