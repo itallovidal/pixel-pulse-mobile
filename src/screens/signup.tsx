@@ -10,9 +10,9 @@ import {TAuthRouteNavigatorProps} from "../routes/RouteTypes";
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {GENRES} from "../@types/apiTypes";
 
 
-const genres = ['FPS', 'RPG'] as const
 
 
 const schema = z.object({
@@ -33,10 +33,10 @@ const schema = z.object({
     }).min(8, {
         message: "Senha deve conter mais de 8 caracteres."
     }),
-    favoriteGen1: z.enum(genres, {
+    favoriteGen1: z.enum(GENRES, {
         required_error: "Escolha os gêneros, por favor."
     }),
-    favoriteGen2: z.enum(genres, {
+    favoriteGen2: z.enum(GENRES, {
         required_error: "Escolha os gêneros, por favor."
     }),
 

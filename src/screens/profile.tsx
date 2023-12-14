@@ -11,6 +11,7 @@ import ChangeProfileInfo from "../components/changeProfileInfo";
 
 
 function Profile() {
+    const [selected, setSelected] = React.useState(0)
 
     const theme = useTheme()
     return (
@@ -28,10 +29,10 @@ function Profile() {
                     <Text color={"white"}> FPS | RPG</Text>
 
 
-                    <Center  my={8} justifyContent={"center"}>
+                    <Center px={8} w={"full"} my={8} justifyContent={"center"}>
 
                         <SelectDropdown
-                            data={['Trocar Gêneros', 'Trocar Jogo Favorito', 'Trocar Senha e Nick']}
+                            data={['Modificar Infos', 'Trocar Gêneros', 'Trocar Senha', 'Modificar Perfil']}
                             buttonStyle={{
                                 backgroundColor: theme.colors["gray"]["400"],
                                 borderRadius: 4,
@@ -40,13 +41,15 @@ function Profile() {
                             }}
                             buttonTextStyle={{color: "white"}}
                             dropdownStyle={{
-                                marginTop: -50,
+                                marginTop: "-10%",
                                 backgroundColor: 'white',
-                                borderRadius: 4
+                                borderRadius: 4,
                             }}
-                            defaultButtonText={'Modificar Infos'}
+                            defaultValueByIndex={0}
                             onSelect={(selectedItem, index) => {
-                                console.log(selectedItem, index)
+                                console.log(selectedItem, )
+                                console.log(index )
+                                setSelected(index)
                             }}
                             buttonTextAfterSelection={(selectedItem, index) => {
                                 return selectedItem
@@ -56,11 +59,16 @@ function Profile() {
                             }}
                         />
 
-                        {/*<ChangeGenres/>*/}
-                        {/*<ChangePassword/>*/}
-                        <ChangeProfileInfo/>
-                    </Center>
+                        {
+                            selected === 1
+                                ? <ChangeGenres/>
+                                : selected === 2
+                                ? <ChangePassword/>
+                                : selected === 3
+                                ? <ChangeProfileInfo/> : null
+                        }
 
+                    </Center>
                     <Button> Voltar </Button>
                 </Center>
             </VStack>

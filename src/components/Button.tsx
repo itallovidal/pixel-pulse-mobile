@@ -10,7 +10,6 @@ function Button({children, ...props} : IMyButton ) {
         <NativeBaseButton {...props}  _pressed={{
                                 bg: "red.500"
                             }}
-
                            bg={"gray.500"}
 
         >
