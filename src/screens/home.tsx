@@ -1,73 +1,75 @@
 import React from 'react';
-import {Center, Divider, HStack, Icon, ScrollView, Text, useTheme, View, VStack} from "native-base";
-import {ImageBackground} from "react-native";
-import placeholder from "../assets/fotoplaceholder.png";
-import {LinearGradient} from "expo-linear-gradient";
-import {CaretDown, Star} from "phosphor-react-native";
+import {
+    FlatList,
+    HStack,
+    TextArea,
+    VStack
+} from "native-base";
+
 import Button from "../components/Button";
+import Comment from "../components/comment";
+import HeaderHome from "../components/headerHome";
+import {Gesture, GestureDetector} from "react-native-gesture-handler";
+import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
+
+
+const data = [
+    {
+        id: 1
+    },
+    {
+        id: 2
+    },
+
+]
+
+const AnimatedVStack = Animated.createAnimatedComponent(VStack)
+
 
 function Home() {
-    const theme = useTheme()
-    const [descriptionToggle, setDescriptionToggle] = React.useState(false)
+    const [show, setShow] = React.useState(false)
+
 
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <VStack bg={"gray.700"} flex={1}>
-                <View position={"absolute"} w={"full"} h={"60%"}>
-                    <ImageBackground
-                        style={{width : '100%', height: '100%'}}
-                        source={placeholder}>
+            <VStack bg={"gray.700"}  flex={1}>
+                <FlatList
+                    onScroll={({nativeEvent: {contentOffset}})=>{
+                        console.log(contentOffset)
+                        if(contentOffset.y > 0){
+                            setShow(true)
+                        }
 
-                        <LinearGradient
-                            colors={['rgba(0,0,0,0)', theme.colors['gray']['900']]}
-                            style={{height : '100%', width : '100%'}}/>
+                        if(contentOffset.y === 0){
+                            setShow(false)
+                        }
+                    }}
 
-                    </ImageBackground>
-                </View>
+                    ListHeaderComponent={<HeaderHome/>}
+                    data={data}
+                    renderItem={()=>{
+                        return <Comment/>
+                    }}/>
 
-                <VStack px={8} pt={"56"}>
-                    <Text fontSize={32}
-                          color={"white"}
-                          fontWeight={"bold"}
-                          marginLeft={-3    }
-                          > Valorant </Text>
+                {
+                    show ? (
+                        <AnimatedVStack entering={FadeIn} exiting={FadeOut} p={4}  bg={"gray.700"} w={"full"} my={6}>
+                            <TextArea autoCompleteType variant={"unstyled"}
+                                      placeholder={"Digite um breve comentário."}
+                                      borderWidth={0}
+                                      bgColor={"gray.400"}
+                                      mb={4}
+                                      p={4}
+                                      color={"white"}/>
+                            <HStack justifyContent={"flex-end"}>
+                                <Button buttonTheme={"unstyled"}>Sem comentários..</Button>
+                                <Button buttonTheme={"whiteTheme"}>Postar</Button>
+                            </HStack>
+                        </AnimatedVStack>
+                    )
+                        : null
+                }
 
-                    <Text fontSize={16}
-                          color={"white"}
-                          marginLeft={-1}
-                    > PC | 20/06/2020 | Riot Games</Text>
-
-                    <Divider my={4} h={1} bg={"red.500"} w={"10%"}/>
-
-                    <Text fontSize={16}
-                          color={"white"}
-                          marginLeft={-1}
-                          numberOfLines={descriptionToggle ? 99 : 3}
-                          onPress={()=>{
-                              setDescriptionToggle(!descriptionToggle)
-                          }}
-                    > Valorant is a team-based tactical shooter and first-person shooter set in the near-future. Players assume the control of agents, characters who come from a plethora of countries and cultures around the world. In the main game mode, players join either the...</Text>
-
-                    <HStack justifyContent={"center"} my={4}>
-                        <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"}  />
-                        <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"} />
-                        <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"} />
-                        <Star size={48} color={theme.colors["yellow"][600]} weight={"light"}/>
-                        <Star size={48} color={theme.colors["yellow"][600]} weight={"light"}/>
-                    </HStack>
-
-                    <Button buttonTheme={"unstyled"}> Não joguei..</Button>
-
-                    <Center my={4}>
-                        <Icon as={CaretDown} name="CaretDown"  color="white"  />
-                        <Icon opacity={.6} mt={-3} as={CaretDown} name="CaretDown"  color="white"  />
-                        <Icon opacity={.3} mt={-3} as={CaretDown} name="CaretDown"  color="white"  />
-
-                    </Center>
-                </VStack>
             </VStack>
-
-        </ScrollView>
     );
 }
 

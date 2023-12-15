@@ -6,6 +6,8 @@ import {NavigationContainer} from "@react-navigation/native";
 import {LinearGradient} from "expo-linear-gradient";
 import AppRoutes from "./src/routes/AppRoutes";
 
+
+import Temp from './temp'
 const config = {
     dependencies: {
         'linear-gradient': LinearGradient
@@ -20,6 +22,8 @@ export default function App() {
               {/*<AuthRoutes/>*/}
               <AppRoutes/>
           </NavigationContainer>
+
+          {/*<Temp/>*/}
       </NativeBaseProvider>
   );
 }
