@@ -12,6 +12,9 @@ export const Theme = extendTheme({
             100: '#E1E1E6'
         },
         white: '#FFFFFF',
+        yellow: {
+            600: '#eeab1d'
+        }
     },
     fonts: {
         // heading: 'Roboto_700Bold',

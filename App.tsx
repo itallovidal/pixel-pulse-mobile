@@ -2,9 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import {NativeBaseProvider} from "native-base";
 import {Theme} from "./src/style/theme";
 import {NavigationContainer} from "@react-navigation/native";
-import AuthRoutes from "./src/routes/AuthRoutes";
-import Profile from "./src/screens/profile";
+// import AuthRoutes from "./src/routes/AuthRoutes";
 import {LinearGradient} from "expo-linear-gradient";
+import AppRoutes from "./src/routes/AppRoutes";
 
 const config = {
     dependencies: {
@@ -18,7 +18,7 @@ export default function App() {
         <StatusBar/>
           <NavigationContainer>
               {/*<AuthRoutes/>*/}
-              <Profile/>
+              <AppRoutes/>
           </NavigationContainer>
       </NativeBaseProvider>
   );
