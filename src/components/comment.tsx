@@ -2,17 +2,30 @@ import React from 'react';
 import {Image, VStack, Text, HStack, Icon, Button, useTheme} from "native-base";
 import {ThumbsDown, ThumbsUp} from "phosphor-react-native";
 import placeholder from '../assets/fotoplaceholder.png'
+import Animated, {FadeIn, useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 
-function Comment() {
+const AnimatedHStack = Animated.createAnimatedComponent(HStack)
+
+function Comment({opcty} : {opcty: boolean}) {
+    const opacityValue = useSharedValue(.2)
+
+
+
     const [menageLike, setLiked] = React.useState({
         liked: false,
         disliked: false
     })
 
+    const animatedStyle = useAnimatedStyle(()=>{
+        return {
+            opacity: withSpring(opcty ?  opacityValue.value = 1 : opacityValue.value = .2)
+        }
+    })
+
     const theme = useTheme()
 
     return (
-        <HStack px={4} my={4}>
+        <AnimatedHStack style={[animatedStyle]} px={4} my={4}>
             <Image mr={2} w={60} mt={3} h={60} rounded={"full"} alt={"imagem de perfil"} source={placeholder}/>
 
             <VStack flex={1}>
@@ -66,7 +79,7 @@ function Comment() {
                     </Button>
                 </HStack>
             </VStack>
-        </HStack>
+        </AnimatedHStack>
     );
 }
 

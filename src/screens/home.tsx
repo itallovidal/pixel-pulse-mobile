@@ -9,8 +9,7 @@ import {
 import Button from "../components/Button";
 import Comment from "../components/comment";
 import HeaderHome from "../components/headerHome";
-import {Gesture, GestureDetector} from "react-native-gesture-handler";
-import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
+import Animated, { FadeInDown, FadeOut} from "react-native-reanimated";
 
 
 const data = [
@@ -20,7 +19,15 @@ const data = [
     {
         id: 2
     },
-
+    {
+        id: 3
+    },
+    {
+        id: 4
+    },
+    {
+        id: 5
+    },
 ]
 
 const AnimatedVStack = Animated.createAnimatedComponent(VStack)
@@ -35,7 +42,7 @@ function Home() {
                 <FlatList
                     onScroll={({nativeEvent: {contentOffset}})=>{
                         console.log(contentOffset)
-                        if(contentOffset.y > 0){
+                        if(contentOffset.y > 10){
                             setShow(true)
                         }
 
@@ -47,12 +54,12 @@ function Home() {
                     ListHeaderComponent={<HeaderHome/>}
                     data={data}
                     renderItem={()=>{
-                        return <Comment/>
+                        return <Comment opcty={show}/>
                     }}/>
 
                 {
                     show ? (
-                        <AnimatedVStack entering={FadeIn} exiting={FadeOut} p={4}  bg={"gray.700"} w={"full"} my={6}>
+                        <AnimatedVStack entering={FadeInDown.duration(300).delay(300)} exiting={FadeOut} p={4}  bg={"gray.700"} w={"full"} my={6}>
                             <TextArea autoCompleteType variant={"unstyled"}
                                       placeholder={"Digite um breve comentário."}
                                       borderWidth={0}
