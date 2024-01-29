@@ -53,7 +53,7 @@ function Login(){
                         source={placeholder}>
 
                         <LinearGradient
-                            colors={['rgba(0,0,0,0)', theme.colors['gray']['400']]}
+                            colors={['rgba(0,0,0,0)', theme.colors['gray']['700']]}
                             style={{height : '100%', width : '100%'}}/>
 
                     </ImageBackground>

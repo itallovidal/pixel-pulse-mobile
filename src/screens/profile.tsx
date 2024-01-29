@@ -7,6 +7,8 @@ import SelectDropdown from "react-native-select-dropdown";
 import ChangeGenres from "../components/changeGenres";
 import ChangePassword from "../components/changePassword";
 import ChangeProfileInfo from "../components/changeProfileInfo";
+import {ImageBackground} from "react-native";
+import {LinearGradient} from "expo-linear-gradient";
 
 
 
@@ -15,13 +17,17 @@ function Profile() {
 
     const theme = useTheme()
     return (
-        <ScrollView bg={theme.colors['gray']['400']}>
-            <VStack bg={{
-                    linearGradient: {
-                        colors: [theme.colors['gray']['900'], theme.colors['gray']['400']],
-                    }
-                }}>
-                <Image maxH={200} w={"full"} resizeMode={"cover"} source={placeholder}/>
+        <ScrollView bg={theme.colors['gray']['700']}>
+            <VStack bg={theme.colors['gray']['700']}>
+                <ImageBackground
+                    style={{width : '100%', height: '100%', maxHeight: 200}}
+                    source={placeholder}>
+
+                    <LinearGradient
+                        colors={['rgba(0,0,0,0)', theme.colors['gray']['700']]}
+                        style={{height : '100%', width : '100%'}}/>
+
+                </ImageBackground>
                 <Center>
                     <Image mb={8} borderRadius={"full"} mt={-60} h={120} w={120} source={placeholderprofile}/>
 

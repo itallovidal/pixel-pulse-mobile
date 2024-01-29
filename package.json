@@ -1,6 +1,7 @@
 {
   "name": "pixelpulse",
   "version": "1.0.0",
+  "proxy": "http://192.168.1.138:8080",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -14,6 +15,7 @@
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
+    "axios": "^1.6.3",
     "expo": "~49.0.15",
     "expo-linear-gradient": "~12.3.0",
     "expo-status-bar": "~1.6.0",

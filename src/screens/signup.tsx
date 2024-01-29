@@ -1,4 +1,4 @@
-import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme} from 'native-base'
+import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme, useToast} from 'native-base'
 import {ImageBackground} from 'react-native';
 import React from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
@@ -11,6 +11,7 @@ import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {GENRES} from "../@types/apiTypes";
+import {Api} from "../utilities/axios";
 
 
 
@@ -33,10 +34,10 @@ const schema = z.object({
     }).min(8, {
         message: "Senha deve conter mais de 8 caracteres."
     }),
-    favoriteGen1: z.enum(GENRES, {
+    favoriteGenre1: z.enum(GENRES, {
         required_error: "Escolha os gêneros, por favor."
     }),
-    favoriteGen2: z.enum(GENRES, {
+    favoriteGenre2: z.enum(GENRES, {
         required_error: "Escolha os gêneros, por favor."
     }),
 
@@ -51,8 +52,8 @@ const schema = z.object({
 }, {
     message: "Senhas não coincidem",
     path: ['passwordConfirmation']
-}).refine(({favoriteGen1, favoriteGen2})=>{
-    if(favoriteGen1 === favoriteGen2){
+}).refine(({favoriteGenre1, favoriteGenre2})=>{
+    if(favoriteGenre1 === favoriteGenre2){
         return false
     }
 
@@ -70,10 +71,48 @@ function Signup(){
         resolver: zodResolver(schema)
     })
     const theme = useTheme()
+    const [isLoading, setIsLoading] = React.useState(false)
+    const toast = useToast()
 
+    async function signup(formData : ISchema){
+        setIsLoading(true)
 
-    function signup(data : ISchema){
-        console.log(data)
+        try{
+            // const response = await fetch('http://10.0.2.2:8080/users/signup', {
+            //     method: "POST",
+            //     headers:{
+            //         'Content-Type': 'application/json',
+            //         Accept: 'application/json',
+            //     },
+            //     body: JSON.stringify(data)
+            // })
+
+            const {data} = await Api.post('users/signup', formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: 'application/json'
+                }
+            })
+
+            console.log(data)
+
+            toast.show({
+                bgColor: "green.700",
+                title: data,
+                placement: "bottom"
+            })
+
+        }catch (e){
+            console.log(e)
+
+            toast.show({
+                bgColor: "red.700",
+                title: "Não foi possível criar o usuário!",
+                placement: "bottom"
+            })
+        }finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -87,7 +126,7 @@ function Signup(){
                         source={placeholder}>
 
                         <LinearGradient
-                            colors={['rgba(0,0,0,0)', theme.colors['gray']['400']]}
+                            colors={['rgba(0,0,0,0)', theme.colors['gray']['700']]}
                             style={{height : '100%', width : '100%'}}/>
 
                     </ImageBackground>
@@ -194,7 +233,7 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGen1', selectedItem, {
+                            setValue('favoriteGenre1', selectedItem, {
                                 shouldDirty: true,
                                 shouldValidate: true
                             })
@@ -224,7 +263,7 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGen2', selectedItem, {
+                            setValue('favoriteGenre2', selectedItem, {
                                 shouldDirty: true,
                                 shouldValidate: true
                             })
@@ -239,11 +278,11 @@ function Signup(){
                     />
 
                     {
-                        errors.favoriteGen1?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGen1?.message}</Text>
+                        errors.favoriteGenre1?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGenre1?.message}</Text>
                     }
 
                     {
-                        errors.favoriteGen2?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGen2?.message}</Text>
+                        errors.favoriteGenre2?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGenre2?.message}</Text>
                     }
 
                     <Text color={"white"} mt={4} mb={2} fontSize={16}> Jogo da Vida </Text>
@@ -274,6 +313,7 @@ function Signup(){
                                 }} bg={"white"}
                                 mt={4}
                                 w={"60%"}
+                                isLoading={isLoading}
                                 onPress={handleSubmit(signup)}
                         >
 
