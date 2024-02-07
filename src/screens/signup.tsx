@@ -12,11 +12,14 @@ import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {GENRES} from "../@types/apiTypes";
 import {Api} from "../utilities/axios";
+import ErrorText from "../components/ErrorText";
+import {AnimatedVstack} from "../components/AnimatedComponents";
 
 
 
 
 const schema = z.object({
+    name: z.string().min(5),
     email: z.string({
         required_error: "Prencha o email, por favor."
     }).min(5, {
@@ -34,33 +37,38 @@ const schema = z.object({
     }).min(8, {
         message: "Senha deve conter mais de 8 caracteres."
     }),
-    favoriteGenre1: z.enum(GENRES, {
-        required_error: "Escolha os gêneros, por favor."
+    favGenre1: z.number({
+        required_error: "Por favor, escolha seu gênero favorito 1!"
+    }).refine((arg)=>{
+        return GENRES.some((genre)=>{
+            return genre.id === arg;
+        })
     }),
-    favoriteGenre2: z.enum(GENRES, {
-        required_error: "Escolha os gêneros, por favor."
+    favGenre2: z.number({
+        required_error: "Por favor, escolha seu gênero favorito 2!"
+    }).refine((arg)=>{
+        return GENRES.some((genre)=>{
+            return genre.id === arg;
+        })
     }),
 
-    gamesLife: z.string({
+    favoriteGame: z.string({
         required_error: "Qual jogo mais te marcou?"
     }).min(4)
 }).refine(({password, passwordConfirmation})=>{
-    if(password === passwordConfirmation){
-        return true
-    }
-    return false
+    return password === passwordConfirmation;
+
 }, {
     message: "Senhas não coincidem",
     path: ['passwordConfirmation']
-}).refine(({favoriteGenre1, favoriteGenre2})=>{
-    if(favoriteGenre1 === favoriteGenre2){
-        return false
-    }
+}).refine(({favGenre1, favGenre2})=>{
+    console.log(favGenre1, favGenre2)
+    return favGenre1 !== favGenre2;
 
-    return true
+
 }, {
     message: "Os gêneros não podem ser iguais!",
-    path: ['favoriteGen2']
+    path: ['favGenre2']
 })
 
 interface ISchema extends z.infer<typeof schema>{}
@@ -74,19 +82,12 @@ function Signup(){
     const [isLoading, setIsLoading] = React.useState(false)
     const toast = useToast()
 
+    console.log(errors)
+
     async function signup(formData : ISchema){
         setIsLoading(true)
 
         try{
-            // const response = await fetch('http://10.0.2.2:8080/users/signup', {
-            //     method: "POST",
-            //     headers:{
-            //         'Content-Type': 'application/json',
-            //         Accept: 'application/json',
-            //     },
-            //     body: JSON.stringify(data)
-            // })
-
             const {data} = await Api.post('users/signup', formData, {
                 headers: {
                     "Content-Type": "application/json",
@@ -96,27 +97,21 @@ function Signup(){
 
             console.log(data)
 
-            toast.show({
-                bgColor: "green.700",
-                title: data,
-                placement: "bottom"
-            })
-
-        }catch (e){
+            navigation.navigate("login", {
+                userCreated: true
+            })}
+        catch (e){
             console.log(e)
-
             toast.show({
                 bgColor: "red.700",
                 title: "Não foi possível criar o usuário!",
                 placement: "bottom"
             })
-        }finally {
             setIsLoading(false)
         }
     }
 
     return (
-
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <VStack bg={"gray.700"} flex={1}>
 
@@ -166,7 +161,28 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.email?.message && <Text mb={8} color={"red.500"}>{errors?.email?.message}</Text>
+                        errors.email?.message && <ErrorText error={errors.email?.message}/>
+                    }
+
+                    <Controller control={control}
+                                name={"name"}
+                                render={({field: {onChange, onBlur, value}})=> (
+                                    <Input placeholder={"coloque seu nick!"}
+                                           mb={2}
+                                           bg={"gray.400"}
+                                           color={"white"}
+                                           borderWidth={0}
+                                           _focus={{
+                                               bgColor: "gray.600"
+                                           }}
+                                           onChangeText={onChange}
+                                           onBlur={onBlur}
+                                           value={value}
+                                    />
+                                )} />
+
+                    {
+                        errors.name?.message && <ErrorText error={errors.name?.message}/>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Senha </Text>
@@ -189,7 +205,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.password?.message && <Text mb={8} color={"red.500"}>{errors?.password?.message}</Text>
+                        errors.password?.message && <ErrorText error={errors.password?.message}/>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Confirme a senha </Text>
@@ -212,13 +228,13 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.passwordConfirmation?.message && <Text mb={8} color={"red.500"}>{errors?.passwordConfirmation?.message}</Text>
+                        errors.passwordConfirmation?.message && <ErrorText error={errors.passwordConfirmation?.message}/>
                     }
 
                     <Text color={"white"} mb={2} fontSize={16}> Gêneros Favoritos </Text>
 
                     <SelectDropdown
-                        data={['RPG', 'FPS']}
+                        data={GENRES}
                         buttonStyle={{
                             backgroundColor: theme.colors["gray"]["400"],
                             borderRadius: 4,
@@ -233,22 +249,22 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGenre1', selectedItem, {
+                            setValue('favGenre1', selectedItem.id, {
                                 shouldDirty: true,
                                 shouldValidate: true
                             })
                             console.log(selectedItem, index)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
-                            return selectedItem
+                            return selectedItem.brName
                         }}
                         rowTextForSelection={(item, index) => {
-                            return item
+                            return item.brName
                         }}
                     />
 
                     <SelectDropdown
-                        data={['RPG', 'FPS']}
+                        data={GENRES}
                         buttonStyle={{
                             backgroundColor: theme.colors["gray"]["400"],
                             borderRadius: 4,
@@ -263,31 +279,31 @@ function Signup(){
                         }}
                         defaultButtonText={'Selecione o gênero.'}
                         onSelect={(selectedItem, index) => {
-                            setValue('favoriteGenre2', selectedItem, {
+                            setValue('favGenre2', selectedItem.id, {
                                 shouldDirty: true,
                                 shouldValidate: true
                             })
                             console.log(selectedItem, index)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
-                            return selectedItem
+                            return selectedItem.brName
                         }}
                         rowTextForSelection={(item, index) => {
-                            return item
+                            return item.brName
                         }}
                     />
 
                     {
-                        errors.favoriteGenre1?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGenre1?.message}</Text>
+                        errors.favGenre1?.message && <ErrorText error={errors.favGenre1?.message}/>
                     }
 
                     {
-                        errors.favoriteGenre2?.message && <Text mb={8} color={"red.500"}>{errors?.favoriteGenre2?.message}</Text>
+                        errors.favGenre2?.message && <ErrorText error={errors.favGenre2?.message}/>
                     }
 
                     <Text color={"white"} mt={4} mb={2} fontSize={16}> Jogo da Vida </Text>
                     <Controller control={control}
-                                name={"gamesLife"}
+                                name={"favoriteGame"}
                                 render={({field: {onChange, onBlur, value}})=> (
                                     <Input placeholder={"*******"}
                                            mb={2}
@@ -304,7 +320,7 @@ function Signup(){
                                 )} />
 
                     {
-                        errors.gamesLife?.message && <Text mb={8} color={"red.500"}>{errors?.gamesLife?.message}</Text>
+                        errors.favoriteGame?.message && <ErrorText error={errors.favoriteGame?.message}/>
                     }
 
                     <Center>
@@ -329,7 +345,9 @@ function Signup(){
                             bg: "red.500"
                         }}
                         onPress={()=> {
-                            navigation.goBack()
+                            navigation.navigate("login",  {
+                                userCreated: false
+                            })
                         }}
                         bg={"gray.500"} w={"60%"}><Text color={"white"}>Entrar!</Text></Button>
                 </Center>

@@ -14,6 +14,9 @@ function AuthRoutes() {
 
             <Screen name={'login'}
                     component={Login}
+                    initialParams={{
+                        userCreated: false
+                    }}
 
             />
 

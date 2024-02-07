@@ -1,7 +1,9 @@
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 
 export type IAuthRoute = {
-    login: undefined,
+    login: {
+        userCreated: boolean
+    },
     signup: undefined,
 }
 

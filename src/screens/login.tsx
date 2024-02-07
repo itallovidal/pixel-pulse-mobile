@@ -1,14 +1,15 @@
-import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme} from 'native-base'
+import {Button, Center, Input, Text, VStack, Image, Box, View, ScrollView, useTheme, useToast} from 'native-base'
 import {ImageBackground} from 'react-native';
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 
 import placeholder from '../assets/fotoplaceholder.png'
 import {LinearGradient} from "expo-linear-gradient";
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useNavigation} from "@react-navigation/native";
+import {useFocusEffect, useNavigation, useRoute} from "@react-navigation/native";
 import {TAuthRouteNavigatorProps} from "../routes/RouteTypes";
+import ErrorText from "../components/ErrorText";
 
 
 const schema = z.object({
@@ -33,9 +34,21 @@ function Login(){
         resolver: zodResolver(schema)
     })
     const navigation = useNavigation<TAuthRouteNavigatorProps>()
-
+    const {params} = useRoute()
+    const {userCreated} = params as {userCreated: boolean}
     const theme = useTheme()
+    const toast = useToast()
 
+    useEffect(() => {
+        if(userCreated){
+            console.log("foi!")
+            toast.show({
+                bgColor: "green.700",
+                title: "Bem vindo! Faça o login abaixo.",
+                placement: "top"
+            })
+        }
+    }, [userCreated]);
 
     function login({password, email} : ISchema){
         console.log(email)
@@ -86,7 +99,7 @@ function Login(){
                                     )} />
 
                     {
-                        errors.email?.message && <Text mb={8} color={"red.500"}>{errors?.email?.message}</Text>
+                        errors.email?.message && <ErrorText error={errors.email?.message}/>
                     }
 
 
@@ -114,7 +127,7 @@ function Login(){
 
 
                     {
-                        errors.password?.message && <Text mb={8} color={"red.500"}>{errors?.password?.message}</Text>
+                        errors.password?.message && <ErrorText error={errors.password?.message}/>
                     }
 
 
