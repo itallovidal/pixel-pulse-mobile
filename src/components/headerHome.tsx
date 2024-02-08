@@ -1,70 +1,136 @@
-import React from 'react';
-import {Center, Divider, HStack, Icon, Text, useTheme, View, VStack} from "native-base";
-import {ImageBackground} from "react-native";
-import placeholder from "../assets/fotoplaceholder.png";
-import {LinearGradient} from "expo-linear-gradient";
-import {CaretDown, Star} from "phosphor-react-native";
-import Button from "./Button";
+import React from 'react'
+import {
+  Center,
+  Divider,
+  HStack,
+  Icon,
+  Text,
+  useTheme,
+  View,
+  VStack,
+} from 'native-base'
+import { ImageBackground } from 'react-native'
+import placeholder from '../assets/fotoplaceholder.png'
+import { LinearGradient } from 'expo-linear-gradient'
+import { CaretDown, Star } from 'phosphor-react-native'
+import Button from './Button'
+import { Api } from '../utilities/axios'
+import { IGame } from '../@types/apiTypes'
+import { GlobalContext } from './context/globalContextProvider'
+import { AnimatedImageBackground, AnimatedText } from './AnimatedComponents'
+import { FadeIn, Layout } from 'react-native-reanimated'
+import { layout } from 'native-base/lib/typescript/theme/styled-system'
 
 function HeaderHome() {
-    const theme = useTheme()
-    const [descriptionToggle, setDescriptionToggle] = React.useState(false)
+  const { getGame } = React.useContext(GlobalContext)
+  const theme = useTheme()
+  const [game, setGame] = React.useState<IGame>()
+  const [loading, setLoading] = React.useState<boolean>()
+  const [descriptionToggle, setDescriptionToggle] = React.useState(false)
 
-    return (
-        <VStack bg={"gray.700"} flex={1}>
-            <View position={"absolute"} w={"full"} h={"60%"}>
-                <ImageBackground
-                    style={{width : '100%', height: '100%'}}
-                    source={placeholder}>
+  React.useEffect(() => {
+    updateGame()
+  }, [])
 
-                    <LinearGradient
-                        colors={['rgba(0,0,0,0)', theme.colors['gray']['700']]}
-                        style={{height : '100%', width : '100%'}}/>
+  async function updateGame() {
+    setLoading(true)
+    const game = await getGame()
+    setGame(game)
+    setLoading(false)
+  }
 
-                </ImageBackground>
-            </View>
+  return game ? (
+    <VStack bg={'gray.700'} flex={1}>
+      <View position={'absolute'} w={'full'} h={'60%'}>
+        <AnimatedImageBackground
+          layout={Layout}
+          style={{ width: '100%', height: '100%' }}
+          source={{ uri: `https:${game.cover.url}` }}
+        >
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', theme.colors.gray['700']]}
+            style={{ height: '100%', width: '100%' }}
+          />
+        </AnimatedImageBackground>
+      </View>
 
-            <VStack px={8} pt={"56"}>
-                <Text fontSize={32}
-                      color={"white"}
-                      fontWeight={"bold"}
-                      marginLeft={-3    }
-                > Valorant </Text>
+      <VStack px={8} pt={'56'}>
+        <Text
+          pl={1}
+          fontSize={32}
+          color={'white'}
+          fontWeight={'bold'}
+          marginLeft={-3}
+        >
+          {game.name}
+        </Text>
 
-                <Text fontSize={16}
-                      color={"white"}
-                      marginLeft={-1}
-                > PC | 20/06/2020 | Riot Games</Text>
+        <Text fontSize={16} color={'white'} marginLeft={-1}>
+          {game.platforms.map((plat, index) => {
+            return (
+              <Text>
+                {plat.name} {index === game.platforms.length - 1 ? '' : '|'}{' '}
+              </Text>
+            )
+          })}
+        </Text>
+        <Text fontSize={16} color={'white'} marginLeft={-1}>
+          {game.releaseDate}
+        </Text>
 
-                <Divider my={4} h={1} bg={"red.500"} w={"10%"}/>
+        <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
 
-                <Text fontSize={16}
-                      color={"white"}
-                      marginLeft={-1}
-                      numberOfLines={descriptionToggle ? 99 : 3}
-                      onPress={()=>{
-                          setDescriptionToggle(!descriptionToggle)
-                      }}
-                > Valorant is a team-based tactical shooter and first-person shooter set in the near-future. Players assume the control of agents, characters who come from a plethora of countries and cultures around the world. In the main game mode, players join either the...</Text>
+        <AnimatedText
+          layout={FadeIn.duration(800)}
+          fontSize={16}
+          color={'white'}
+          marginLeft={-1}
+          numberOfLines={descriptionToggle ? 99 : 3}
+          onPress={() => {
+            setDescriptionToggle(!descriptionToggle)
+          }}
+        >
+          {game.summary}
+        </AnimatedText>
 
-                <HStack justifyContent={"center"} my={4}>
-                    <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"}  />
-                    <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"} />
-                    <Star size={48} color={theme.colors["yellow"][600]} weight={"fill"} />
-                    <Star size={48} color={theme.colors["yellow"][600]} weight={"light"}/>
-                    <Star size={48} color={theme.colors["yellow"][600]} weight={"light"}/>
-                </HStack>
+        <HStack justifyContent={'center'} my={4}>
+          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
+          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
+          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
+          <Star size={48} color={theme.colors.yellow[600]} weight={'light'} />
+          <Star size={48} color={theme.colors.yellow[600]} weight={'light'} />
+        </HStack>
 
-                <Button buttonTheme={"unstyled"}> Não joguei..</Button>
+        <Button
+          isLoading={loading}
+          onPress={() => updateGame()}
+          buttonTheme={'unstyled'}
+        >
+          Não joguei..
+        </Button>
 
-                <Center my={4}>
-                    <Icon as={CaretDown} name="CaretDown"  color="white"  />
-                    <Icon opacity={.6} mt={-3} as={CaretDown} name="CaretDown"  color="white"  />
-                    <Icon opacity={.3} mt={-3} as={CaretDown} name="CaretDown"  color="white"  />
-                </Center>
-            </VStack>
-        </VStack>
-    );
+        <Center my={4}>
+          <Icon as={CaretDown} name="CaretDown" color="white" />
+          <Icon
+            opacity={0.6}
+            mt={-3}
+            as={CaretDown}
+            name="CaretDown"
+            color="white"
+          />
+          <Icon
+            opacity={0.3}
+            mt={-3}
+            as={CaretDown}
+            name="CaretDown"
+            color="white"
+          />
+        </Center>
+      </VStack>
+    </VStack>
+  ) : (
+    <Text>Carregando</Text>
+  )
 }
 
-export default HeaderHome;
+export default HeaderHome
