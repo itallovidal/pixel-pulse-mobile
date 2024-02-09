@@ -24,7 +24,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
-import { TAuthRouteNavigatorProps } from '../routes/RouteTypes'
+import { TAuthRouteNavigatorProps } from '../routes/routes'
 import ErrorText from '../components/ErrorText'
 import { Api } from '../utilities/axios'
 import { GlobalContext } from '../components/context/globalContextProvider'
@@ -55,8 +55,7 @@ const schema = z.object({
 type ISchema = z.infer<typeof schema>
 
 function Login() {
-  const { setNewUserToken, showToast, theme, getGame } =
-    React.useContext(GlobalContext)
+  const { setNewUserToken, showToast, theme } = React.useContext(GlobalContext)
   const {
     control,
     handleSubmit,
@@ -95,7 +94,7 @@ function Login() {
         throw new Error('ops')
       }
 
-      setNewUserToken(response.data)
+      await setNewUserToken(response.data)
     } catch (e) {
       if (e instanceof LoginDataException) {
         setError(e.Field() as keyof ISchema, {

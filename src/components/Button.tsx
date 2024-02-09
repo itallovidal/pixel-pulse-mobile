@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Button as NativeBaseButton, IButtonProps, Text } from 'native-base'
 
 interface IMyButton extends IButtonProps {
-  children: string
+  children: string | ReactNode
   buttonTheme?: 'default' | 'unstyled' | 'whiteTheme' | 'redTheme'
 }
 

@@ -134,3 +134,9 @@ export interface IGame {
   summary: string
   releaseDate: string
 }
+
+export interface IRate {
+  gameID: number
+  userID: string
+  stars: number
+}

@@ -3,7 +3,7 @@ import React from 'react'
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import Button from "../components/Button";
+import Button from "../Button";
 
 const schema = z.object({
     oldPassword: z.string({

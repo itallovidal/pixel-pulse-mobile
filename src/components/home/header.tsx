@@ -2,41 +2,37 @@ import React from 'react'
 import {
   Center,
   Divider,
-  HStack,
   Icon,
   Text,
   useTheme,
   View,
   VStack,
 } from 'native-base'
-import { ImageBackground } from 'react-native'
-import placeholder from '../assets/fotoplaceholder.png'
 import { LinearGradient } from 'expo-linear-gradient'
-import { CaretDown, Star } from 'phosphor-react-native'
-import Button from './Button'
-import { Api } from '../utilities/axios'
-import { IGame } from '../@types/apiTypes'
-import { GlobalContext } from './context/globalContextProvider'
-import { AnimatedImageBackground, AnimatedText } from './AnimatedComponents'
+import { CaretDown } from 'phosphor-react-native'
+import Button from '../Button'
+import { AnimatedImageBackground, AnimatedText } from '../AnimatedComponents'
 import { FadeIn, Layout } from 'react-native-reanimated'
-import { layout } from 'native-base/lib/typescript/theme/styled-system'
+import { ReviewContext } from '../context/ReviewContext'
+import StarReview from './starReview'
 
-function HeaderHome() {
-  const { getGame } = React.useContext(GlobalContext)
+function Header() {
+  const { game, updateGame } = React.useContext(ReviewContext)
   const theme = useTheme()
-  const [game, setGame] = React.useState<IGame>()
   const [loading, setLoading] = React.useState<boolean>()
   const [descriptionToggle, setDescriptionToggle] = React.useState(false)
 
   React.useEffect(() => {
-    updateGame()
+    getGame()
   }, [])
 
-  async function updateGame() {
-    setLoading(true)
-    const game = await getGame()
-    setGame(game)
-    setLoading(false)
+  async function getGame() {
+    try {
+      setLoading(true)
+      await updateGame()
+    } finally {
+      setLoading(false)
+    }
   }
 
   return game ? (
@@ -56,8 +52,8 @@ function HeaderHome() {
 
       <VStack px={8} pt={'56'}>
         <Text
-          pl={1}
-          fontSize={32}
+          pl={2}
+          fontSize={24}
           color={'white'}
           fontWeight={'bold'}
           marginLeft={-3}
@@ -74,7 +70,13 @@ function HeaderHome() {
             )
           })}
         </Text>
-        <Text fontSize={16} color={'white'} marginLeft={-1}>
+        <Text
+          fontSize={16}
+          mt={4}
+          opacity={0.7}
+          color={'white'}
+          marginLeft={-1}
+        >
           {game.releaseDate}
         </Text>
 
@@ -93,21 +95,17 @@ function HeaderHome() {
           {game.summary}
         </AnimatedText>
 
-        <HStack justifyContent={'center'} my={4}>
-          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
-          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
-          <Star size={48} color={theme.colors.yellow[600]} weight={'fill'} />
-          <Star size={48} color={theme.colors.yellow[600]} weight={'light'} />
-          <Star size={48} color={theme.colors.yellow[600]} weight={'light'} />
-        </HStack>
-
         <Button
           isLoading={loading}
-          onPress={() => updateGame()}
+          onPress={() => getGame()}
           buttonTheme={'unstyled'}
+          mt={2}
+          bg={'gray.600'}
         >
           Não joguei..
         </Button>
+
+        <StarReview />
 
         <Center my={4}>
           <Icon as={CaretDown} name="CaretDown" color="white" />
@@ -133,4 +131,4 @@ function HeaderHome() {
   )
 }
 
-export default HeaderHome
+export default Header

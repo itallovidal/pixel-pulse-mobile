@@ -1,16 +1,14 @@
 import React, { ReactNode } from 'react'
 import { ITheme, useTheme, useToast } from 'native-base'
-import { IShowToast, IToken } from '../../@types/ContextTypes'
-import { Api } from '../../utilities/axios'
-import { IGame } from '../../@types/apiTypes'
+import { IShowToast, IToken } from '../../@types/globalContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface IGlobalContext {
-  setNewUserToken: (token: IToken) => void
+  setNewUserToken: (token: IToken) => Promise<void>
   userToken: IToken | undefined
   theme: ITheme
   showToast: (info: IShowToast) => void
   logout: () => void
-  getGame: () => Promise<IGame>
 }
 
 export const GlobalContext = React.createContext({} as IGlobalContext)
@@ -19,14 +17,18 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
   const theme = useTheme()
   const toast = useToast()
 
-  async function getGame() {
-    try {
-      const { data } = await Api.get('/games/random')
-      return data
-    } catch (e) {
-      console.log(e)
+  React.useEffect(() => {
+    getStoredToken()
+  }, [])
+
+  async function getStoredToken() {
+    const data = await AsyncStorage.getItem('token')
+    if (data) {
+      const token = JSON.parse(data)
+      setUserToken(token)
     }
   }
+
   function showToast({ placement, bg, title }: IShowToast) {
     toast.show({
       placement,
@@ -35,7 +37,13 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  function setNewUserToken(token: IToken) {
+  async function storeToken(token: IToken) {
+    const data = JSON.stringify(token)
+    await AsyncStorage.setItem('token', data)
+  }
+
+  async function setNewUserToken(token: IToken) {
+    await storeToken(token)
     setUserToken(token)
   }
 
@@ -45,7 +53,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <GlobalContext.Provider
-      value={{ setNewUserToken, userToken, theme, showToast, logout, getGame }}
+      value={{ setNewUserToken, userToken, theme, showToast, logout }}
     >
       {children}
     </GlobalContext.Provider>
