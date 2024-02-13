@@ -1,3 +1,5 @@
+import { number } from 'zod'
+
 export const GENRES = [
   {
     id: 4,
@@ -133,10 +135,25 @@ export interface IGame {
   platforms: Platform[]
   summary: string
   releaseDate: string
+  genres: {
+    id: number
+    name: string
+  }[]
 }
 
 export interface IRate {
   gameID: number
   userID: string
+  stars: number
+}
+
+export interface IRatedGame {
+  id: number
+  cover: {
+    id: number
+    url: string
+  }
+  genres: Platform[]
+  name: string
   stars: number
 }

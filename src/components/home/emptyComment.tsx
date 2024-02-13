@@ -19,7 +19,7 @@ function EmptyComment({ opcty }: { opcty: boolean }) {
   })
 
   return (
-    <AnimatedCenter style={[animatedStyle]} px={4} mt={4}>
+    <AnimatedCenter style={[animatedStyle]} px={4} my={6}>
       <ChatCircleDots size={64} color={'white'} />
       <Text fontWeight={'bold'} color={'white'}>
         First!

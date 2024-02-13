@@ -16,10 +16,13 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {AnimatedHStack} from "../AnimatedComponents";
+import { AnimatedHStack } from '../AnimatedComponents'
+import { ReviewContext } from '../context/ReviewContext'
+import { GlobalContext } from '../context/globalContextProvider'
 
 function Comment({ opcty }: { opcty: boolean }) {
   const opacityValue = useSharedValue(0.2)
+  const { theme } = React.useContext(GlobalContext)
 
   const [menageLike, setLiked] = React.useState({
     liked: false,
@@ -33,8 +36,6 @@ function Comment({ opcty }: { opcty: boolean }) {
       ),
     }
   })
-
-  const theme = useTheme()
 
   return (
     <AnimatedHStack style={[animatedStyle]} px={4} my={4}>

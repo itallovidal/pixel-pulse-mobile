@@ -7,7 +7,7 @@ import { GlobalContext } from '../context/globalContextProvider'
 import { ReviewContext } from '../context/ReviewContext'
 
 function CommentBox() {
-  const { postRating } = React.useContext(ReviewContext)
+  const { postRating, isReviewLoading } = React.useContext(ReviewContext)
 
   return (
     <AnimatedVstack
@@ -19,6 +19,10 @@ function CommentBox() {
       my={6}
     >
       <TextArea
+        isDisabled={isReviewLoading}
+        _disabled={{
+          opacity: 0.4,
+        }}
         autoCompleteType
         variant={'unstyled'}
         placeholder={'Digite um breve comentário.'}
@@ -29,10 +33,16 @@ function CommentBox() {
         color={'white'}
       />
       <HStack justifyContent={'flex-end'}>
-        <Button onPress={() => postRating()} buttonTheme={'unstyled'}>
+        <Button
+          isLoading={isReviewLoading}
+          onPress={() => postRating()}
+          buttonTheme={'unstyled'}
+        >
           Avaliar sem comentárioa
         </Button>
-        <Button buttonTheme={'whiteTheme'}>Postar</Button>
+        <Button isDisabled={isReviewLoading} buttonTheme={'whiteTheme'}>
+          Postar
+        </Button>
       </HStack>
     </AnimatedVstack>
   )

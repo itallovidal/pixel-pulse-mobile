@@ -1,44 +1,74 @@
 import React from 'react'
 import { HStack, Image, Text, VStack } from 'native-base'
-import placeholder from '../../assets/fotoplaceholder.png'
 import { Star } from 'phosphor-react-native'
 import { AnimatedHStack } from '../AnimatedComponents'
 import { GlobalContext } from '../context/globalContextProvider'
+import { GENRES, IRatedGame } from '../../@types/game'
+import { FadeIn } from 'react-native-reanimated'
 
-function RatedCard() {
+function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
   const { theme } = React.useContext(GlobalContext)
 
+  const stars = []
+
+  const filtered = game.genres.map((gen) => {
+    return GENRES.find((genre) => genre.id === gen.id)
+  })
+
+  for (let i = 1; i < 6; i++) {
+    if (i <= game.stars) {
+      stars.push(
+        <Star
+          key={i}
+          size={24}
+          color={theme.colors.yellow[600]}
+          weight={'fill'}
+        />,
+      )
+    } else {
+      stars.push(
+        <Star
+          key={i}
+          size={24}
+          color={theme.colors.yellow[600]}
+          weight={'light'}
+        />,
+      )
+    }
+  }
   return (
-    <AnimatedHStack bg={'black'} my={1}>
+    <AnimatedHStack entering={FadeIn.delay(delay)} bg={'black'} my={1}>
       <Image
         w={'1/4'}
         h={'full'}
         alt={'imagem de perfil'}
-        source={placeholder}
+        source={{ uri: `https:${game.cover.url}` }}
       />
 
       <VStack ml={5} py={4} flex={1}>
         <Text
           fontSize={18}
-          numberOfLines={1}
+          numberOfLines={2}
           fontWeight={'bold'}
           color={'white'}
+          mb={2}
         >
-          Overwatch
+          {game.name}
         </Text>
 
-        <HStack>
-          <Star size={24} color={theme.colors.yellow[600]} weight={'light'} />
-          <Star size={24} color={theme.colors.yellow[600]} weight={'light'} />
-          <Star size={24} color={theme.colors.yellow[600]} weight={'light'} />
-          <Star size={24} color={theme.colors.yellow[600]} weight={'light'} />
-          <Star size={24} color={theme.colors.yellow[600]} weight={'light'} />
-        </HStack>
+        <HStack>{stars}</HStack>
 
         <HStack mt={2}>
-          <Text flex={1} color={'white'} opacity={0.6}>
-            FPS | Action Games
-          </Text>
+          {
+            <Text flex={1} color={'white'} opacity={0.6}>
+              {filtered.map((genre, index) => {
+                return (
+                  genre?.brName +
+                  (index === game.genres.length - 1 ? '' : ' | ')
+                )
+              })}
+            </Text>
+          }
         </HStack>
       </VStack>
     </AnimatedHStack>

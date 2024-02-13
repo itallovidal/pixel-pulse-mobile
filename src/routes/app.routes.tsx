@@ -5,7 +5,7 @@ import Profile from '../screens/profile'
 import { IAPPRoute } from './routes'
 import { Button, Image, useTheme } from 'native-base'
 import menuIcon from '../assets/menuIcon.png'
-import Catalogue from "../screens/catalogue";
+import Catalogue from '../screens/catalogue'
 
 const { Navigator, Screen } = createDrawerNavigator<IAPPRoute>()
 function AppRoutes() {
@@ -16,6 +16,24 @@ function AppRoutes() {
       screenOptions={({ navigation }) => {
         return {
           headerShown: true,
+          headerLeft: () => null,
+          drawerPosition: 'right',
+          headerRight: () => {
+            return (
+              <Button
+                variant={'unstyled'}
+                onPress={() => navigation.toggleDrawer()}
+              >
+                <Image
+                  alt={'menu icon'}
+                  style={{
+                    transform: [{ rotateY: '180deg' }],
+                  }}
+                  source={menuIcon}
+                />
+              </Button>
+            )
+          },
           drawerStyle: {
             backgroundColor: theme.colors.gray['700'],
           },
@@ -25,22 +43,30 @@ function AppRoutes() {
           drawerActiveTintColor: theme.colors.gray['700'],
           headerTransparent: true,
           headerTitle: '',
-          headerLeft: () => {
-            return (
-              <Button
-                variant={'unstyled'}
-                onPress={() => navigation.toggleDrawer()}
-              >
-                <Image alt={'menu icon'} source={menuIcon} />
-              </Button>
-            )
-          },
         }
       }}
     >
-      <Screen name={'home'} component={Home} />
-      <Screen name={'profile'} component={Profile} />
-      <Screen name={'catalogue'} component={Catalogue} />
+      <Screen
+        options={{
+          drawerLabel: `Home`,
+        }}
+        name={'home'}
+        component={Home}
+      />
+      <Screen
+        options={{
+          drawerLabel: `Perfil`,
+        }}
+        name={'profile'}
+        component={Profile}
+      />
+      <Screen
+        options={{
+          drawerLabel: `Meu Catálogo`,
+        }}
+        name={'catalogue'}
+        component={Catalogue}
+      />
     </Navigator>
   )
 }

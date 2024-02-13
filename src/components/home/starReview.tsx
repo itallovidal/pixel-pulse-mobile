@@ -6,17 +6,26 @@ import { ReviewContext } from '../context/ReviewContext'
 
 function StarReview() {
   const { theme } = React.useContext(GlobalContext)
-  const { rating, updateRating } = React.useContext(ReviewContext)
+  const { rating, updateRating, isReviewLoading } =
+    React.useContext(ReviewContext)
 
   const stars = []
 
   for (let i = 1; i < 6; i++) {
     stars.push(
-      <Pressable key={i} onPress={() => updateRating(i)} variant={'unstyled'}>
+      <Pressable
+        disabled={isReviewLoading}
+        key={i}
+        onPress={() => updateRating(i)}
+        variant={'unstyled'}
+        _disabled={{
+          opacity: 0.3,
+        }}
+      >
         <Star
           size={48}
           color={theme.colors.yellow[600]}
-          weight={rating >= i ? 'fill' : 'light'}
+          weight={rating >= i ? 'fill' : 'thin'}
         />
       </Pressable>,
     )

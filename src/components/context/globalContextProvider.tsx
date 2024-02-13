@@ -29,6 +29,11 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function logout() {
+    await AsyncStorage.clear()
+    setUserToken(undefined)
+  }
+
   function showToast({ placement, bg, title }: IShowToast) {
     toast.show({
       placement,
@@ -45,10 +50,6 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
   async function setNewUserToken(token: IToken) {
     await storeToken(token)
     setUserToken(token)
-  }
-
-  function logout() {
-    setUserToken(undefined)
   }
 
   return (

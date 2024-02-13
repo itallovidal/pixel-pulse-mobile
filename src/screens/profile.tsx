@@ -17,8 +17,10 @@ import ChangePassword from '../components/profile/changePassword'
 import ChangeProfileInfo from '../components/profile/changeProfileInfo'
 import { ImageBackground } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
+import { GlobalContext } from '../components/context/globalContextProvider'
 
 function Profile() {
+  const { logout } = React.useContext(GlobalContext)
   const [selected, setSelected] = React.useState(0)
 
   const theme = useTheme()
@@ -91,7 +93,7 @@ function Profile() {
               <ChangeProfileInfo />
             ) : null}
           </Center>
-          <Button> Voltar </Button>
+          <Button onPress={() => logout()}> Voltar </Button>
         </Center>
       </VStack>
     </ScrollView>

@@ -26,7 +26,6 @@ import { GENRES } from '../@types/game'
 import { Api } from '../utilities/axios'
 import ErrorText from '../components/ErrorText'
 
-
 const schema = z
   .object({
     name: z.string().min(5),

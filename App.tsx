@@ -14,7 +14,7 @@ const config = {
 export default function App() {
   return (
     <NativeBaseProvider config={config} theme={Theme}>
-      <StatusBar />
+      <StatusBar style={'light'} />
       <GlobalContextProvider>
         <Box flex={1} bg={'gray.700'}>
           <IndexRoutes />

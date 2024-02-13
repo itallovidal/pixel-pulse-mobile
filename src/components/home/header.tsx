@@ -1,8 +1,11 @@
 import React from 'react'
 import {
+  Box,
   Center,
   Divider,
+  HStack,
   Icon,
+  Spinner,
   Text,
   useTheme,
   View,
@@ -11,27 +14,31 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 import { CaretDown } from 'phosphor-react-native'
 import Button from '../Button'
-import { AnimatedImageBackground, AnimatedText } from '../AnimatedComponents'
-import { FadeIn, Layout } from 'react-native-reanimated'
+import {
+  AnimatedHStack,
+  AnimatedImageBackground,
+  AnimatedText,
+} from '../AnimatedComponents'
+import { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
 import { ReviewContext } from '../context/ReviewContext'
 import StarReview from './starReview'
+import SelectFilter from './selectFilter'
 
 function Header() {
-  const { game, updateGame } = React.useContext(ReviewContext)
+  const { game, updateGame, isReviewLoading, filter } =
+    React.useContext(ReviewContext)
   const theme = useTheme()
-  const [loading, setLoading] = React.useState<boolean>()
   const [descriptionToggle, setDescriptionToggle] = React.useState(false)
 
   React.useEffect(() => {
-    getGame()
+    updateGame(filter)
   }, [])
 
   async function getGame() {
     try {
-      setLoading(true)
-      await updateGame()
-    } finally {
-      setLoading(false)
+      await updateGame(filter)
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -53,6 +60,7 @@ function Header() {
       <VStack px={8} pt={'56'}>
         <Text
           pl={2}
+          numberOfLines={2}
           fontSize={24}
           color={'white'}
           fontWeight={'bold'}
@@ -64,7 +72,7 @@ function Header() {
         <Text fontSize={16} color={'white'} marginLeft={-1}>
           {game.platforms.map((plat, index) => {
             return (
-              <Text>
+              <Text key={index}>
                 {plat.name} {index === game.platforms.length - 1 ? '' : '|'}{' '}
               </Text>
             )
@@ -78,6 +86,23 @@ function Header() {
           marginLeft={-1}
         >
           {game.releaseDate}
+        </Text>
+
+        <Text
+          fontSize={16}
+          mt={2}
+          opacity={0.7}
+          color={'white'}
+          marginLeft={-1}
+        >
+          {/* TODO FAZER UMA FUNCAO AQUI */}
+          {game.genres.map((genre, index) => {
+            return (
+              <Text key={index}>
+                {genre.name} {index === game.genres.length - 1 ? '' : '|'}{' '}
+              </Text>
+            )
+          })}
         </Text>
 
         <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
@@ -95,20 +120,29 @@ function Header() {
           {game.summary}
         </AnimatedText>
 
-        <Button
-          isLoading={loading}
-          onPress={() => getGame()}
-          buttonTheme={'unstyled'}
-          mt={2}
-          bg={'gray.600'}
-        >
-          Não joguei..
-        </Button>
+        {isReviewLoading ? (
+          <Spinner color={'red.500'} my={6} />
+        ) : (
+          <AnimatedHStack exiting={FadeOut} entering={FadeIn} space={2} my={6}>
+            <Button
+              isLoading={isReviewLoading}
+              onPress={() => getGame()}
+              buttonTheme={'unstyled'}
+              bg={'gray.600'}
+              w={`1/2`}
+              h={`100%`}
+            >
+              Não joguei..
+            </Button>
+            <SelectFilter />
+          </AnimatedHStack>
+        )}
 
         <StarReview />
 
         <Center my={4}>
           <Icon as={CaretDown} name="CaretDown" color="white" />
+
           <Icon
             opacity={0.6}
             mt={-3}

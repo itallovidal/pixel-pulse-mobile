@@ -1,25 +1,56 @@
-import React from 'react'
-import { Center, Divider, Image, ScrollView, Text, VStack } from 'native-base'
-import { ImageBackground } from 'react-native'
-import placeholder from '../assets/fotoplaceholder.png'
-import { LinearGradient } from 'expo-linear-gradient'
-import placeholderprofile from '../assets/placeholderprofile.jpg'
-import SelectDropdown from 'react-native-select-dropdown'
-import ChangePassword from '../components/profile/changePassword'
-import ChangeProfileInfo from '../components/profile/changeProfileInfo'
+import React, { useCallback } from 'react'
+import {
+  Center,
+  Divider,
+  FlatList,
+  ScrollView,
+  Text,
+  VStack,
+} from 'native-base'
+
 import Button from '../components/Button'
 import { GlobalContext } from '../components/context/globalContextProvider'
+import { Api } from '../utilities/axios'
+import { IRatedGame } from '../@types/game'
 import RatedCard from '../components/catalogue/ratedCard'
+import { useFocusEffect } from '@react-navigation/native'
 
 function Catalogue() {
-  const { theme } = React.useContext(GlobalContext)
+  const { theme, userToken } = React.useContext(GlobalContext)
+  const [games, setGames] = React.useState<IRatedGame[] | undefined>()
+
+  async function getRatedGames() {
+    try {
+      const { data } = await Api.get('games/rated', {
+        headers: {
+          Authorization: `Bearer ${userToken?.accessToken}`,
+        },
+      })
+
+      return data as IRatedGame[]
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('catalogo')
+      getRatedGames().then((data) => setGames(data))
+    }, []),
+  )
 
   return (
-    <ScrollView flex={1}>
+    <VStack
+      // justifyContent={'space-between'}
+      flex={1}
+      bg={theme.colors.gray['700']}
+    >
       <VStack
         flex={1}
         bg={theme.colors.gray['700']}
         p={8}
+        alignItems={'center'}
         justifyContent={'center'}
       >
         <Text color={'white'} fontWeight={'bold'} fontSize={32}>
@@ -27,16 +58,21 @@ function Catalogue() {
         </Text>
         <Text color={'white'}> Veja a Lista de jogos avaliados abaixo.</Text>
         <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
-
-        <RatedCard />
-        <RatedCard />
-        <RatedCard />
-        <RatedCard />
-        <RatedCard />
-
-        <Button mt={4}> Voltar </Button>
+        <FlatList
+          w={'full'}
+          data={games}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item, index }) => (
+            <RatedCard game={item} delay={index * 100} />
+          )}
+        />
       </VStack>
-    </ScrollView>
+      <Center>
+        <Button w={'1/2'} mt={4}>
+          Voltar{' '}
+        </Button>
+      </Center>
+    </VStack>
   )
 }
 
