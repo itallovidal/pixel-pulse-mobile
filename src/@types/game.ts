@@ -123,22 +123,31 @@ interface ICover {
   url: string
 }
 
-interface Platform {
-  id: number
-  name: string
-}
-
 export interface IGame {
   id: number
   cover: ICover
   name: string
-  platforms: Platform[]
+  platforms: {
+    id: number
+    name: string
+  }[]
   summary: string
   releaseDate: string
   genres: {
     id: number
     name: string
   }[]
+}
+
+export interface IComment {
+  id: string
+  gameID: number
+  userID: string
+  likes: number
+  dislikes: number
+  comment: string
+  created_at: Date
+  user: { name: string; favGenre1: number; favGenre2: number }
 }
 
 export interface IRate {
@@ -153,7 +162,10 @@ export interface IRatedGame {
     id: number
     url: string
   }
-  genres: Platform[]
+  genres: {
+    id: number
+    name: string
+  }[]
   name: string
   stars: number
 }

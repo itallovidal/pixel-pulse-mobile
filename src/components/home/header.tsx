@@ -23,9 +23,10 @@ import { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
 import { ReviewContext } from '../context/ReviewContext'
 import StarReview from './starReview'
 import SelectFilter from './selectFilter'
+import { formatListOfContents, getGenreName } from '../../utilities/methods'
 
 function Header() {
-  const { game, updateGame, isReviewLoading, filter } =
+  const { game, updateGame, isReviewLoading, filter, rating } =
     React.useContext(ReviewContext)
   const theme = useTheme()
   const [descriptionToggle, setDescriptionToggle] = React.useState(false)
@@ -33,14 +34,6 @@ function Header() {
   React.useEffect(() => {
     updateGame(filter)
   }, [])
-
-  async function getGame() {
-    try {
-      await updateGame(filter)
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
   return game ? (
     <VStack bg={'gray.700'} flex={1}>
@@ -70,13 +63,7 @@ function Header() {
         </Text>
 
         <Text fontSize={16} color={'white'} marginLeft={-1}>
-          {game.platforms.map((plat, index) => {
-            return (
-              <Text key={index}>
-                {plat.name} {index === game.platforms.length - 1 ? '' : '|'}{' '}
-              </Text>
-            )
-          })}
+          <Text>{formatListOfContents(game.platforms)}</Text>
         </Text>
         <Text
           fontSize={16}
@@ -95,14 +82,7 @@ function Header() {
           color={'white'}
           marginLeft={-1}
         >
-          {/* TODO FAZER UMA FUNCAO AQUI */}
-          {game.genres.map((genre, index) => {
-            return (
-              <Text key={index}>
-                {genre.name} {index === game.genres.length - 1 ? '' : '|'}{' '}
-              </Text>
-            )
-          })}
+          <Text>{formatListOfContents(game.genres)}</Text>
         </Text>
 
         <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
@@ -125,8 +105,9 @@ function Header() {
         ) : (
           <AnimatedHStack exiting={FadeOut} entering={FadeIn} space={2} my={6}>
             <Button
+              isDisabled={rating > 0}
               isLoading={isReviewLoading}
-              onPress={() => getGame()}
+              onPress={() => updateGame(filter)}
               buttonTheme={'unstyled'}
               bg={'gray.600'}
               w={`1/2`}
@@ -134,6 +115,7 @@ function Header() {
             >
               Não joguei..
             </Button>
+
             <SelectFilter />
           </AnimatedHStack>
         )}

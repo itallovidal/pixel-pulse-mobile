@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react'
-import { IGame, IRate } from '../../@types/game'
+import { IComment, IGame, IRate } from '../../@types/game'
 import { Api } from '../../utilities/axios'
 import { GlobalContext } from './globalContextProvider'
+import { IPostCommentSchema } from '../../schemas/postCommentSchema'
 
 interface IReviewContext {
   updateRating: (star: number) => void
@@ -16,12 +17,18 @@ interface IReviewContext {
   changeCommentBoxState: (state: boolean) => void
   changeFilterState: (state: `discover` | `forme`) => void
   filter: `discover` | `forme`
+  submitComment: ({ text }: IPostCommentSchema) => void
+  commentaries: IComment[] | null[]
+  changeCommentsState: (state: IComment[]) => void
 }
 
 export const ReviewContext = React.createContext({} as IReviewContext)
 export function ReviewContextProvider({ children }: { children: ReactNode }) {
   const [rating, setRating] = React.useState<number>(0)
   const [showCommentBox, setShowCommentBox] = React.useState<boolean>(false)
+  const [commentaries, setCommentaries] = React.useState<IComment[] | null[]>([
+    null,
+  ])
   const { showToast, userToken } = React.useContext(GlobalContext)
   const [game, setGame] = React.useState<IGame>()
   const [isReviewLoading, setIsReviewLoading] = React.useState(false)
@@ -34,6 +41,11 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
   function changeFilterState(state: `discover` | `forme`) {
     setFilter(state)
   }
+
+  function changeCommentsState(state: any[]) {
+    setCommentaries(state)
+  }
+
   function changeCommentBoxState(newState: boolean) {
     setShowCommentBox(newState)
   }
@@ -42,11 +54,77 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     setIsReviewLoading(loading)
   }
 
+  function updateRating(star: number) {
+    if (star === 0) {
+      setShowCommentBox(false)
+    } else {
+      setShowCommentBox(true)
+    }
+    setRating(star)
+  }
+
+  async function getComments(id: number) {
+    try {
+      changeReviewLoading(true)
+
+      const response = await Api.get(`/games/comment/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userToken?.accessToken}`,
+        },
+      })
+
+      if (response.status !== 200) {
+        throw new Error('Erro na req')
+      }
+
+      return response.data.length === 0 ? [null] : (response.data as IComment[])
+    } catch (e) {
+      console.log(e)
+      return [null]
+    } finally {
+      changeReviewLoading(false)
+    }
+  }
+
+  async function submitComment({ text }: IPostCommentSchema) {
+    try {
+      changeReviewLoading(true)
+      const data = {
+        comment: text,
+        gameID: game?.id,
+      }
+      const response = await Api.post('/games/comment', data, {
+        headers: {
+          Authorization: `Bearer ${userToken?.accessToken}`,
+        },
+      })
+
+      if (response.status !== 201) {
+        throw new Error('Erro na req')
+      }
+
+      showToast({
+        bg: 'green.700',
+        placement: 'top',
+        title: 'Comentário postado com sucesso!',
+      })
+      const comments = await getComments(game!.id)
+      if (comments) setCommentaries(comments)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      changeReviewLoading(false)
+    }
+  }
+
   async function updateGame(filter: `discover` | `forme`) {
     // console.log(filter)
     const game = await getGame(filter)
     updateRating(0)
     setGame(game)
+    const comments = await getComments(game.id)
+    console.log(comments)
+    setCommentaries(comments)
   }
   async function getGame(filter: `discover` | `forme`) {
     try {
@@ -63,20 +141,9 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       setIsReviewLoading(false)
     }
   }
-  function updateRating(star: number) {
-    console.log(star)
-
-    if (star === 0) {
-      setShowCommentBox(false)
-    } else {
-      setShowCommentBox(true)
-    }
-    setRating(star)
-  }
 
   async function postRating() {
     try {
-      changeReviewLoading(true)
       const data = {
         gameID: game?.id,
         stars: rating,
@@ -99,14 +166,15 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       })
     } catch (e) {
       console.log(e)
-    } finally {
-      changeReviewLoading(false)
     }
   }
 
   return (
     <ReviewContext.Provider
       value={{
+        changeCommentsState,
+        commentaries,
+        submitComment,
         updateGame,
         filter,
         updateRating,

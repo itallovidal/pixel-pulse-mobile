@@ -19,15 +19,11 @@ import Animated, {
 import { AnimatedHStack } from '../AnimatedComponents'
 import { ReviewContext } from '../context/ReviewContext'
 import { GlobalContext } from '../context/globalContextProvider'
+import { IComment } from '../../@types/game'
+import { getGenreName } from '../../utilities/methods'
 
-function Comment({ opcty }: { opcty: boolean }) {
+function Comment({ opcty, data }: { opcty: boolean; data: IComment }) {
   const opacityValue = useSharedValue(0.2)
-  const { theme } = React.useContext(GlobalContext)
-
-  const [menageLike, setLiked] = React.useState({
-    liked: false,
-    disliked: false,
-  })
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -37,8 +33,15 @@ function Comment({ opcty }: { opcty: boolean }) {
     }
   })
 
+  const comments = getGenreName([data.user.favGenre1, data.user.favGenre2])
+
   return (
-    <AnimatedHStack style={[animatedStyle]} px={4} my={4}>
+    <AnimatedHStack
+      entering={FadeIn.delay(100)}
+      style={[animatedStyle]}
+      px={4}
+      my={4}
+    >
       <Image
         mr={2}
         w={60}
@@ -51,70 +54,35 @@ function Comment({ opcty }: { opcty: boolean }) {
 
       <VStack flex={1}>
         <Text fontSize={18} fontWeight={'bold'} color={'white'}>
-          Itallo
+          {data.user.name}
         </Text>
         <Text color={'white'} numberOfLines={5} textBreakStrategy={'balanced'}>
-          Lorem Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard..{' '}
+          {data.comment}
         </Text>
 
         <HStack mt={4}>
           <Text flex={1} color={'white'} opacity={0.6}>
-            FPS | Action Games
+            {getGenreName([data.user.favGenre1, data.user.favGenre2])}
           </Text>
 
-          <Button
-            p={0}
-            onPress={() =>
-              setLiked((prevState) => {
-                if (prevState.liked) {
-                  return {
-                    liked: false,
-                    disliked: !prevState.disliked,
-                  }
-                }
+          {/* <Button p={0} variant={'unstyled'}> */}
+          {/*  <ThumbsDown */}
+          {/*    mirrored={true} */}
+          {/*    // color={menageLike.disliked ? theme.colors.red['500'] : 'white'} */}
+          {/*    color={`white`} */}
+          {/*    size={32} */}
+          {/*    weight={data.likes ? 'fill' : 'thin'} */}
+          {/*  /> */}
+          {/* </Button> */}
 
-                return {
-                  ...prevState,
-                  disliked: !prevState.disliked,
-                }
-              })
-            }
-            variant={'unstyled'}
-          >
-            <ThumbsDown
-              mirrored={true}
-              color={menageLike.disliked ? theme.colors.red['500'] : 'white'}
-              size={32}
-              weight={menageLike.disliked ? 'fill' : 'thin'}
-            />
-          </Button>
-
-          <Button
-            p={0}
-            variant={'unstyled'}
-            onPress={() =>
-              setLiked((prevState) => {
-                if (prevState.disliked) {
-                  return {
-                    liked: !prevState.liked,
-                    disliked: false,
-                  }
-                }
-
-                return {
-                  ...prevState,
-                  liked: !prevState.liked,
-                }
-              })
-            }
-          >
-            <ThumbsUp
-              color={menageLike.liked ? theme.colors.red['500'] : 'white'}
-              size={32}
-              weight={menageLike.liked ? 'fill' : 'thin'}
-            />
-          </Button>
+          {/* <Button p={0} variant={'unstyled'}> */}
+          {/*  <ThumbsUp */}
+          {/*    // color={menageLike.disliked ? theme.colors.red['500'] : 'white'} */}
+          {/*    color={`white`} */}
+          {/*    size={32} */}
+          {/*    weight={data.likes ? 'fill' : 'thin'} */}
+          {/*  /> */}
+          {/* </Button> */}
         </HStack>
       </VStack>
     </AnimatedHStack>

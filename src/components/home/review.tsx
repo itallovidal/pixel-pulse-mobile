@@ -1,15 +1,15 @@
 import React from 'react'
 import { FlatList } from 'native-base'
 import Header from './header'
-import EmptyComment from './emptyComment'
 import Comment from './comment'
 import { ReviewContext } from '../context/ReviewContext'
 import CommentBox from './commentBox'
 import { AnimatedView } from '../AnimatedComponents'
-const data: any[] = [{}]
+import { EmptyComment } from './emptyComment'
+import { IComment } from '../../@types/game'
 
 function Review() {
-  const { game, showCommentBox } = React.useContext(ReviewContext)
+  const { game, showCommentBox, commentaries } = React.useContext(ReviewContext)
 
   React.useEffect(() => {
     if (flatListRef.current) {
@@ -21,7 +21,6 @@ function Review() {
   // @ts-ignore
   const flatListRef = React.useRef<FlatList>(null)
   function scrollToCommentSection() {
-    console.log('jogo novo')
 
     if (!showCommentBox) {
       return
@@ -32,18 +31,20 @@ function Review() {
     }
   }
 
+
+
   return (
     <AnimatedView flex={1}>
       <FlatList
         ref={flatListRef}
         ListHeaderComponent={<Header />}
-        data={data}
+        data={commentaries}
         onLayout={() => scrollToCommentSection()}
-        renderItem={() => {
-          return !data[0].id ? (
-            <EmptyComment opcty={showCommentBox} />
+        renderItem={({ item }) => {
+          return commentaries[0] === null ? (
+            <EmptyComment opcty={!showCommentBox} />
           ) : (
-            <Comment opcty={showCommentBox} />
+            <Comment data={item as IComment} opcty={showCommentBox} />
           )
         }}
       />

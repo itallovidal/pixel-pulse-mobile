@@ -1,27 +1,12 @@
 import React from 'react'
-import { Box, FlatList, HStack, TextArea, VStack } from 'native-base'
+import { Box } from 'native-base'
 
-import Button from '../components/Button'
-import Comment from '../components/home/comment'
-import Header from '../components/home/header'
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  FadeOut,
-} from 'react-native-reanimated'
-import EmptyComment from '../components/home/emptyComment'
-import {
-  ReviewContext,
-  ReviewContextProvider,
-} from '../components/context/ReviewContext'
-import CommentBox from '../components/home/commentBox'
+import { FadeInUp } from 'react-native-reanimated'
+import { ReviewContextProvider } from '../components/context/ReviewContext'
 import { AnimatedVstack } from '../components/AnimatedComponents'
 import Review from '../components/home/review'
 
-
 function Home() {
-
-
   return (
     <Box flex={1} bg={'gray.700'}>
       <ReviewContextProvider>

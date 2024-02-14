@@ -8,7 +8,7 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 
-function EmptyComment({ opcty }: { opcty: boolean }) {
+export function EmptyComment({ opcty }: { opcty: boolean }) {
   const opacityValue = useSharedValue(0.2)
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -32,4 +32,3 @@ function EmptyComment({ opcty }: { opcty: boolean }) {
   )
 }
 
-export default EmptyComment
