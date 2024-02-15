@@ -1,11 +1,11 @@
 import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import Home from '../screens/home'
-import Profile from '../screens/profile'
 import { IAPPRoute } from './routes'
 import { Button, Image, useTheme } from 'native-base'
 import menuIcon from '../assets/menuIcon.png'
 import Catalogue from '../screens/catalogue'
+import Profile from '../screens/profile'
 
 const { Navigator, Screen } = createDrawerNavigator<IAPPRoute>()
 function AppRoutes() {
@@ -49,6 +49,9 @@ function AppRoutes() {
       <Screen
         options={{
           drawerLabel: `Home`,
+        }}
+        initialParams={{
+          gameID: 0,
         }}
         name={'home'}
         component={Home}

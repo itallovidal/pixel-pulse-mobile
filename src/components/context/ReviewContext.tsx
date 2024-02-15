@@ -1,14 +1,14 @@
 import React, { ReactNode } from 'react'
 import { IComment, IGame, IRate } from '../../@types/game'
-import { Api } from '../../utilities/axios'
+import { Api } from '../../utilities/api/axios.config'
 import { GlobalContext } from './globalContextProvider'
 import { IPostCommentSchema } from '../../schemas/postCommentSchema'
 
 interface IReviewContext {
   updateRating: (star: number) => void
   rating: number
-  getGame: (filter: `discover` | `forme`) => Promise<IGame>
-  updateGame: (filter: `discover` | `forme`) => Promise<void>
+  getGame: (filter: `discover` | `forme`, gameID?: number) => Promise<IGame>
+  updateGame: (filter: `discover` | `forme`, gameID?: number) => Promise<void>
   game: IGame | undefined
   postRating: () => void
   isReviewLoading: boolean
@@ -117,19 +117,21 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function updateGame(filter: `discover` | `forme`) {
+  async function updateGame(filter: `discover` | `forme`, gameID?: number) {
     // console.log(filter)
-    const game = await getGame(filter)
+    const game = await getGame(filter, gameID)
     updateRating(0)
     setGame(game)
     const comments = await getComments(game.id)
     console.log(comments)
     setCommentaries(comments)
   }
-  async function getGame(filter: `discover` | `forme`) {
+  async function getGame(filter: `discover` | `forme`, gameID?: number) {
     try {
       setIsReviewLoading(true)
-      const { data } = await Api.get(`/games/random/${filter}`, {
+      const route = gameID ? `/games/${gameID}` : `/games/random/${filter}`
+
+      const { data } = await Api.get(route, {
         headers: {
           Authorization: `Bearer ${userToken?.accessToken}`,
         },

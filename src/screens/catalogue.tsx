@@ -10,7 +10,7 @@ import {
 
 import Button from '../components/Button'
 import { GlobalContext } from '../components/context/globalContextProvider'
-import { Api } from '../utilities/axios'
+import { Api } from '../utilities/api/axios.config'
 import { IRatedGame } from '../@types/game'
 import RatedCard from '../components/catalogue/ratedCard'
 import { useFocusEffect } from '@react-navigation/native'
@@ -41,11 +41,7 @@ function Catalogue() {
   )
 
   return (
-    <VStack
-      // justifyContent={'space-between'}
-      flex={1}
-      bg={theme.colors.gray['700']}
-    >
+    <VStack flex={1} bg={theme.colors.gray['700']}>
       <VStack
         flex={1}
         bg={theme.colors.gray['700']}
@@ -67,11 +63,11 @@ function Catalogue() {
           )}
         />
       </VStack>
-      <Center>
-        <Button w={'1/2'} mt={4}>
-          Voltar{' '}
-        </Button>
-      </Center>
+      {/* <Center> */}
+      {/*  <Button w={'1/2'} mt={4}> */}
+      {/*    Voltar{' '} */}
+      {/*  </Button> */}
+      {/* </Center> */}
     </VStack>
   )
 }

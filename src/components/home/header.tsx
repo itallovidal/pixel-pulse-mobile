@@ -23,17 +23,22 @@ import { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
 import { ReviewContext } from '../context/ReviewContext'
 import StarReview from './starReview'
 import SelectFilter from './selectFilter'
-import { formatListOfContents, getGenreName } from '../../utilities/methods'
+import { formatListOfContents } from '../../utilities/methods'
+import { useRoute } from '@react-navigation/native'
 
 function Header() {
   const { game, updateGame, isReviewLoading, filter, rating } =
     React.useContext(ReviewContext)
   const theme = useTheme()
   const [descriptionToggle, setDescriptionToggle] = React.useState(false)
+  const { params } = useRoute()
+  const { gameID } = params as { gameID: number }
 
   React.useEffect(() => {
-    updateGame(filter)
-  }, [])
+    updateGame(filter, gameID)
+  }, [gameID])
+
+  console.log(game?.cover)
 
   return game ? (
     <VStack bg={'gray.700'} flex={1}>

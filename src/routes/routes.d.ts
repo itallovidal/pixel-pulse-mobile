@@ -12,7 +12,9 @@ export type IAuthRoute = {
 export type TAuthRouteNavigatorProps = NativeStackNavigationProp<IAuthRoute>
 
 export type IAPPRoute = {
-  home: undefined
+  home: {
+    gameID: number
+  }
   profile: undefined
   catalogue: undefined
 }

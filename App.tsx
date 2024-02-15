@@ -4,6 +4,7 @@ import { Theme } from './src/utilities/theme'
 import { LinearGradient } from 'expo-linear-gradient'
 import IndexRoutes from './src/routes/index.routes'
 import { GlobalContextProvider } from './src/components/context/globalContextProvider'
+import { NavigationContainer } from '@react-navigation/native'
 
 const config = {
   dependencies: {
@@ -15,11 +16,13 @@ export default function App() {
   return (
     <NativeBaseProvider config={config} theme={Theme}>
       <StatusBar style={'light'} />
-      <GlobalContextProvider>
-        <Box flex={1} bg={'gray.700'}>
-          <IndexRoutes />
-        </Box>
-      </GlobalContextProvider>
+      <NavigationContainer>
+        <GlobalContextProvider>
+          <Box flex={1} bg={'gray.700'}>
+            <IndexRoutes />
+          </Box>
+        </GlobalContextProvider>
+      </NavigationContainer>
     </NativeBaseProvider>
   )
 }

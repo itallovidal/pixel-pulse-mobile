@@ -157,7 +157,7 @@ export interface IRate {
 }
 
 export interface IRatedGame {
-  id: number
+  id: string
   cover: {
     id: number
     url: string
@@ -168,4 +168,7 @@ export interface IRatedGame {
   }[]
   name: string
   stars: number
+  userID: string
+  gameID: number
+  created_at: Date
 }

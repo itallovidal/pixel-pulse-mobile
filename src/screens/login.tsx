@@ -4,100 +4,55 @@ import {
   Input,
   Text,
   VStack,
-  Image,
-  Box,
   View,
   ScrollView,
-  useTheme,
-  useToast,
 } from 'native-base'
 import { ImageBackground } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
+import React from 'react'
 
 import placeholder from '../assets/fotoplaceholder.png'
 import { LinearGradient } from 'expo-linear-gradient'
-import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native'
-import { TAuthRouteNavigatorProps } from '../routes/routes'
+import { useRoute } from '@react-navigation/native'
 import ErrorText from '../components/ErrorText'
-import { Api } from '../utilities/axios'
 import { GlobalContext } from '../components/context/globalContextProvider'
-import { AxiosError } from 'axios'
 import { LoginDataException } from '../exceptions/LoginDataException'
-import { resolve } from 'react-native-svg/lib/typescript/lib/resolve'
-
-const schema = z.object({
-  email: z
-    .string({
-      required_error: 'Digite o email, por favor.',
-    })
-    .min(5, {
-      message: 'Email deve conter mais de 5 caracteres.',
-    })
-    .email({
-      message: 'Email inválido!',
-    }),
-  password: z
-    .string({
-      required_error: 'Por favor, digite a senha!',
-    })
-    .min(8, {
-      message: 'Senha deve conter mais de 8 caracteres.',
-    }),
-})
-
-type ISchema = z.infer<typeof schema>
+import { ILoginSchema, loginSchema } from '../schemas/loginShcema'
+import { login } from '../utilities/api/login'
 
 function Login() {
-  const { setNewUserToken, showToast, theme } = React.useContext(GlobalContext)
   const {
     control,
     handleSubmit,
-    formState: { errors },
     setError,
-  } = useForm<ISchema>({
-    resolver: zodResolver(schema),
+    formState: { errors },
+  } = useForm<ILoginSchema>({
+    resolver: zodResolver(loginSchema),
   })
-  const navigation = useNavigation<TAuthRouteNavigatorProps>()
+  const { setNewUserToken, showToast, theme, navigation } =
+    React.useContext(GlobalContext)
+
   const { params } = useRoute()
   const { userCreated } = params as { userCreated: boolean }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userCreated) {
-      console.log('foi!')
       showToast({
         bg: 'green.700',
-        title: 'Bem vindo! Faça o login abaixo.',
+        title: 'Bem vindo! Agora é só fazer o login :D',
         placement: 'top',
       })
     }
   }, [userCreated])
 
-  async function login({ password, email }: ISchema) {
+  async function handleLogin(data: ILoginSchema) {
     try {
-      const response = await Api.post('/users/login', {
-        password,
-        email,
-      })
-
-      if (response.status === 404 || response.status === 403) {
-        throw new LoginDataException(response.data)
-      }
-
-      if (response.status !== 200) {
-        throw new Error('ops')
-      }
-
-      await setNewUserToken(response.data)
+      const token = await login(data)
+      await setNewUserToken(token)
     } catch (e) {
       if (e instanceof LoginDataException) {
-        setError(e.Field() as keyof ISchema, {
+        setError(e.Field() as keyof ILoginSchema, {
           message: e.Message(),
         })
       } else {
@@ -198,7 +153,7 @@ function Login() {
               _pressed={{
                 bg: 'red.500',
               }}
-              onPress={handleSubmit(login)}
+              onPress={handleSubmit(handleLogin)}
               bg={'white'}
               mt={4}
               w={'60%'}

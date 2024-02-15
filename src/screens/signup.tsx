@@ -4,138 +4,45 @@ import {
   Input,
   Text,
   VStack,
-  Image,
-  Box,
   View,
   ScrollView,
-  useTheme,
-  useToast,
 } from 'native-base'
 import { ImageBackground } from 'react-native'
 import React from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
-
 import placeholder from '../assets/fotoplaceholder.png'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
-import { TAuthRouteNavigatorProps } from '../routes/routes'
-import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { GENRES } from '../@types/game'
-import { Api } from '../utilities/axios'
 import ErrorText from '../components/ErrorText'
-
-const schema = z
-  .object({
-    name: z.string().min(5),
-    email: z
-      .string({
-        required_error: 'Prencha o email, por favor.',
-      })
-      .min(5, {
-        message: 'Email deve conter mais de 5 caracteres.',
-      })
-      .email({
-        message: 'Email inválido!',
-      }),
-    password: z
-      .string({
-        required_error: 'Por favor, digite a senha!',
-      })
-      .min(8, {
-        message: 'Senha deve conter mais de 8 caracteres.',
-      }),
-    passwordConfirmation: z
-      .string({
-        required_error: 'Por favor, confirme a senha!',
-      })
-      .min(8, {
-        message: 'Senha deve conter mais de 8 caracteres.',
-      }),
-    favGenre1: z
-      .number({
-        required_error: 'Por favor, escolha seu gênero favorito 1!',
-      })
-      .refine((arg) => {
-        return GENRES.some((genre) => {
-          return genre.id === arg
-        })
-      }),
-    favGenre2: z
-      .number({
-        required_error: 'Por favor, escolha seu gênero favorito 2!',
-      })
-      .refine((arg) => {
-        return GENRES.some((genre) => {
-          return genre.id === arg
-        })
-      }),
-
-    favoriteGame: z
-      .string({
-        required_error: 'Qual jogo mais te marcou?',
-      })
-      .min(4),
-  })
-  .refine(
-    ({ password, passwordConfirmation }) => {
-      return password === passwordConfirmation
-    },
-    {
-      message: 'Senhas não coincidem',
-      path: ['passwordConfirmation'],
-    },
-  )
-  .refine(
-    ({ favGenre1, favGenre2 }) => {
-      console.log(favGenre1, favGenre2)
-      return favGenre1 !== favGenre2
-    },
-    {
-      message: 'Os gêneros não podem ser iguais!',
-      path: ['favGenre2'],
-    },
-  )
-
-type ISchema = z.infer<typeof schema>
+import { ISignupSchema, signupSchema } from '../schemas/signupSchema'
+import { GlobalContext } from '../components/context/globalContextProvider'
+import { signup } from '../utilities/api/signup'
 
 function Signup() {
-  const navigation = useNavigation<TAuthRouteNavigatorProps>()
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<ISchema>({
-    resolver: zodResolver(schema),
+  } = useForm<ISignupSchema>({
+    resolver: zodResolver(signupSchema),
   })
-  const theme = useTheme()
+  const { theme, showToast, navigation } = React.useContext(GlobalContext)
   const [isLoading, setIsLoading] = React.useState(false)
-  const toast = useToast()
 
-  console.log(errors)
-
-  async function signup(formData: ISchema) {
-    setIsLoading(true)
-
+  async function handleSignup(data: ISignupSchema) {
     try {
-      const { data } = await Api.post('users/signup', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      })
-
-      console.log(data)
-
+      setIsLoading(true)
+      await signup(data)
       navigation.navigate('login', {
         userCreated: true,
       })
     } catch (e) {
       console.log(e)
-      toast.show({
-        bgColor: 'red.700',
+      showToast({
+        bg: 'red.700',
         title: 'Não foi possível criar o usuário!',
         placement: 'bottom',
       })
@@ -165,8 +72,7 @@ function Signup() {
             fontWeight={'bold'}
             textAlign={'center'}
           >
-            {' '}
-            Junte-se à{' '}
+            Junte-se à
           </Text>
 
           <Text
@@ -177,13 +83,11 @@ function Signup() {
             fontWeight={'bold'}
             textAlign={'center'}
           >
-            {' '}
-            nossa comunidade!{' '}
+            nossa comunidade!
           </Text>
 
           <Text color={'white'} mb={2} fontSize={16}>
-            {' '}
-            Email{' '}
+            Email
           </Text>
 
           <Controller
@@ -291,8 +195,7 @@ function Signup() {
           )}
 
           <Text color={'white'} mb={2} fontSize={16}>
-            {' '}
-            Gêneros Favoritos{' '}
+            Gêneros Favoritos
           </Text>
 
           <SelectDropdown
@@ -364,8 +267,7 @@ function Signup() {
           )}
 
           <Text color={'white'} mt={4} mb={2} fontSize={16}>
-            {' '}
-            Jogo da Vida{' '}
+            Jogo da Vida
           </Text>
           <Controller
             control={control}
@@ -400,7 +302,7 @@ function Signup() {
               mt={4}
               w={'60%'}
               isLoading={isLoading}
-              onPress={handleSubmit(signup)}
+              onPress={handleSubmit(handleSignup)}
             >
               <Text color={'gray.700'}>Registrar</Text>
             </Button>

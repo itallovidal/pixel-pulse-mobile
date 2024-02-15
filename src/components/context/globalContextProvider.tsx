@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react'
 import { ITheme, useTheme, useToast } from 'native-base'
 import { IShowToast, IToken } from '../../@types/globalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
+import { TAuthRouteNavigatorProps } from '../../routes/routes'
 
 interface IGlobalContext {
   setNewUserToken: (token: IToken) => Promise<void>
@@ -9,6 +11,7 @@ interface IGlobalContext {
   theme: ITheme
   showToast: (info: IShowToast) => void
   logout: () => void
+  navigation: TAuthRouteNavigatorProps
 }
 
 export const GlobalContext = React.createContext({} as IGlobalContext)
@@ -16,6 +19,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
   const [userToken, setUserToken] = React.useState<IToken>()
   const theme = useTheme()
   const toast = useToast()
+  const navigation = useNavigation<TAuthRouteNavigatorProps>()
 
   React.useEffect(() => {
     getStoredToken()
@@ -54,7 +58,14 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <GlobalContext.Provider
-      value={{ setNewUserToken, userToken, theme, showToast, logout }}
+      value={{
+        navigation,
+        setNewUserToken,
+        userToken,
+        theme,
+        showToast,
+        logout,
+      }}
     >
       {children}
     </GlobalContext.Provider>

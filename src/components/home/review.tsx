@@ -21,7 +21,6 @@ function Review() {
   // @ts-ignore
   const flatListRef = React.useRef<FlatList>(null)
   function scrollToCommentSection() {
-
     if (!showCommentBox) {
       return
     }
@@ -30,8 +29,6 @@ function Review() {
       flatListRef.current.scrollToEnd({ animated: true })
     }
   }
-
-
 
   return (
     <AnimatedView flex={1}>

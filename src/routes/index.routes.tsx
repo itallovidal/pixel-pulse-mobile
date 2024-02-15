@@ -7,11 +7,7 @@ import AppRoutes from './app.routes'
 function IndexRoutes() {
   const { userToken } = React.useContext(GlobalContext)
 
-  return (
-    <NavigationContainer>
-      {userToken ? <AppRoutes /> : <AuthRoutes />}
-    </NavigationContainer>
-  )
+  return userToken ? <AppRoutes /> : <AuthRoutes />
 }
 
 export default IndexRoutes
