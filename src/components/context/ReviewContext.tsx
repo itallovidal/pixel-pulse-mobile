@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { IComment, IGame, IRate } from '../../@types/game'
+import { IComment, IGame } from '../../@types/game'
 import { Api } from '../../utilities/api/axios.config'
 import { GlobalContext } from './globalContextProvider'
 import { IPostCommentSchema } from '../../schemas/postCommentSchema'
@@ -9,7 +9,7 @@ interface IReviewContext {
   rating: number
   getGame: (filter: `discover` | `forme`, gameID?: number) => Promise<IGame>
   updateGame: (filter: `discover` | `forme`, gameID?: number) => Promise<void>
-  game: IGame | undefined
+  game: IGame
   postRating: () => void
   isReviewLoading: boolean
   changeReviewLoading: (loading: boolean) => void
@@ -30,7 +30,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     null,
   ])
   const { showToast, userToken } = React.useContext(GlobalContext)
-  const [game, setGame] = React.useState<IGame>()
+  const [game, setGame] = React.useState<IGame>({} as IGame)
   const [isReviewLoading, setIsReviewLoading] = React.useState(false)
   const [filter, setFilter] = React.useState<`discover` | `forme`>(`discover`)
 

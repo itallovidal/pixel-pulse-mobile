@@ -10,7 +10,7 @@ import {
 import { ImageBackground } from 'react-native'
 import React from 'react'
 
-import placeholder from '../assets/fotoplaceholder.png'
+import placeholder from '../assets/backgrounds/home.jpg'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,8 +18,13 @@ import { useRoute } from '@react-navigation/native'
 import ErrorText from '../components/ErrorText'
 import { GlobalContext } from '../components/context/globalContextProvider'
 import { LoginDataException } from '../exceptions/LoginDataException'
-import { ILoginSchema, loginSchema } from '../schemas/loginShcema'
+import { ILoginSchema, loginSchema } from '../schemas/loginSchema'
 import { login } from '../utilities/api/login'
+import {
+  AnimatedScrollView,
+  AnimatedVstack,
+} from '../components/AnimatedComponents'
+import { FadeIn } from 'react-native-reanimated'
 
 function Login() {
   const {
@@ -32,6 +37,7 @@ function Login() {
   })
   const { setNewUserToken, showToast, theme, navigation } =
     React.useContext(GlobalContext)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const { params } = useRoute()
   const { userCreated } = params as { userCreated: boolean }
@@ -48,6 +54,7 @@ function Login() {
 
   async function handleLogin(data: ILoginSchema) {
     try {
+      setIsLoading(true)
       const token = await login(data)
       await setNewUserToken(token)
     } catch (e) {
@@ -62,16 +69,24 @@ function Login() {
           bg: 'red.700',
         })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <VStack bg={'gray.700'} flex={1}>
+    <AnimatedScrollView
+      style={{
+        backgroundColor: theme.colors.gray['700'],
+      }}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <AnimatedVstack entering={FadeIn} bg={'gray.700'} flex={1}>
         <View position={'absolute'} w={'full'} h={'60%'}>
           <ImageBackground
             style={{ width: '100%', height: '100%' }}
             source={placeholder}
+            alt={'Background'}
           >
             <LinearGradient
               colors={['rgba(0,0,0,0)', theme.colors.gray['700']]}
@@ -150,6 +165,7 @@ function Login() {
 
           <Center mb={8}>
             <Button
+              isLoading={isLoading}
               _pressed={{
                 bg: 'red.500',
               }}
@@ -183,8 +199,8 @@ function Login() {
             </Button>
           </Center>
         </VStack>
-      </VStack>
-    </ScrollView>
+      </AnimatedVstack>
+    </AnimatedScrollView>
   )
 }
 

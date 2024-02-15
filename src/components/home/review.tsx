@@ -7,16 +7,16 @@ import CommentBox from './commentBox'
 import { AnimatedView } from '../AnimatedComponents'
 import { EmptyComment } from './emptyComment'
 import { IComment } from '../../@types/game'
+import Loading from '../Loading'
 
 function Review() {
-  const { game, showCommentBox, commentaries } = React.useContext(ReviewContext)
-
+  const { game, showCommentBox, commentaries, isReviewLoading } =
+    React.useContext(ReviewContext)
   React.useEffect(() => {
     if (flatListRef.current) {
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
     }
   }, [game?.id])
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const flatListRef = React.useRef<FlatList>(null)
@@ -32,21 +32,29 @@ function Review() {
 
   return (
     <AnimatedView flex={1}>
-      <FlatList
-        ref={flatListRef}
-        ListHeaderComponent={<Header />}
-        data={commentaries}
-        onLayout={() => scrollToCommentSection()}
-        renderItem={({ item }) => {
-          return commentaries[0] === null ? (
-            <EmptyComment opcty={!showCommentBox} />
-          ) : (
-            <Comment data={item as IComment} opcty={showCommentBox} />
-          )
-        }}
-      />
+      {game.id ? (
+        <FlatList
+          ref={flatListRef}
+          ListHeaderComponent={<Header />}
+          data={commentaries}
+          onLayout={() => scrollToCommentSection()}
+          renderItem={({ item }) => {
+            if (isReviewLoading) {
+              return <></>
+            }
 
-      {showCommentBox ? <CommentBox /> : null}
+            return commentaries[0] === null ? (
+              <EmptyComment opcty={!showCommentBox} />
+            ) : (
+              <Comment data={item as IComment} opcty={showCommentBox} />
+            )
+          }}
+        />
+      ) : (
+        <Loading />
+      )}
+
+      {showCommentBox && !isReviewLoading ? <CommentBox /> : null}
     </AnimatedView>
   )
 }

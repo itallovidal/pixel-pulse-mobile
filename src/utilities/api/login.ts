@@ -1,6 +1,6 @@
 import { Api } from './axios.config'
 import { LoginDataException } from '../../exceptions/LoginDataException'
-import { ILoginSchema } from '../../schemas/loginShcema'
+import { ILoginSchema } from '../../schemas/loginSchema'
 
 export async function login(data: ILoginSchema) {
   const response = await Api.post('/users/login', data)

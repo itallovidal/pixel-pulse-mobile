@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { ITheme, useTheme, useToast } from 'native-base'
 import { IShowToast, IToken } from '../../@types/globalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { TAuthRouteNavigatorProps } from '../../routes/routes'
 
 interface IGlobalContext {
@@ -44,6 +44,10 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
       bg,
       title,
     })
+
+    setTimeout(() => {
+      toast.closeAll()
+    }, 2000)
   }
 
   async function storeToken(token: IToken) {

@@ -10,7 +10,7 @@ import {
 import { ImageBackground } from 'react-native'
 import React from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
-import placeholder from '../assets/fotoplaceholder.png'
+import background from '../assets/backgrounds/signup.png'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -56,7 +56,7 @@ function Signup() {
         <View position={'absolute'} w={'full'} h={'60%'}>
           <ImageBackground
             style={{ width: '100%', height: '100%' }}
-            source={placeholder}
+            source={background}
           >
             <LinearGradient
               colors={['rgba(0,0,0,0)', theme.colors.gray['700']]}

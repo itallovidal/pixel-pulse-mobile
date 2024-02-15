@@ -3,7 +3,13 @@ import { GENRES } from '../@types/game'
 
 export const signupSchema = z
   .object({
-    name: z.string().min(5),
+    name: z
+      .string({
+        required_error: 'Informe o nick!',
+      })
+      .min(5, {
+        message: `Seu nick deve conter pelo menos 5 caracteres.`,
+      }),
     email: z
       .string({
         required_error: 'Prencha o email, por favor.',
