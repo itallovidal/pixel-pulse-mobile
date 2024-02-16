@@ -7,12 +7,14 @@ import StarReview from './starReview'
 import { ReviewContext } from '../context/ReviewContext'
 import Loading from '../Loading'
 import { GlobalContext } from '../context/globalContextProvider'
+import { VStack } from 'native-base'
 
 function RatingControls() {
   const {
     updateGame,
     isReviewLoading,
     handleUpdatedRating,
+    handleSubmitRating,
     gameToEdit,
     state: { filter, rating },
   } = React.useContext(ReviewContext)
@@ -37,8 +39,8 @@ function RatingControls() {
   return isReviewLoading ? (
     <Loading />
   ) : (
-    <>
-      <AnimatedHStack exiting={FadeOut} entering={FadeIn} space={2} my={6}>
+    <VStack my={6} space={6}>
+      <AnimatedHStack exiting={FadeOut} entering={FadeIn} space={2}>
         {gameToEdit.gameID > 0 ? (
           <>
             <Button
@@ -68,10 +70,21 @@ function RatingControls() {
               onPress={() => updateGame(filter)}
               buttonTheme={'unstyled'}
               bg={'gray.600'}
-              w={`1/2`}
+              flex={1}
               h={`100%`}
             >
               Não joguei..
+            </Button>
+
+            <Button
+              isDisabled={rating === 0}
+              isLoading={isReviewLoading}
+              bg={'red.600'}
+              flex={1}
+              onPress={() => handleSubmitRating()}
+              buttonTheme={'unstyled'}
+            >
+              Avaliar
             </Button>
 
             <SelectFilter />
@@ -79,7 +92,7 @@ function RatingControls() {
         )}
       </AnimatedHStack>
       <StarReview />
-    </>
+    </VStack>
   )
 }
 

@@ -58,7 +58,7 @@ function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
       <AnimatedHStack
         entering={FadeIn.delay(delay)}
         bg={'black'}
-        minH={140}
+        minH={160}
         p={3}
         my={2}
         rounded={'md'}

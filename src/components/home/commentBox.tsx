@@ -13,7 +13,7 @@ import {
 } from '../../schemas/postCommentSchema'
 
 function CommentBox() {
-  const { handleSubmitRating, isReviewLoading, handleSubmitComment } =
+  const { isReviewLoading, handleSubmitComment } =
     React.useContext(ReviewContext)
   const {
     control,
@@ -66,22 +66,14 @@ function CommentBox() {
         )}
       />
 
-      <HStack justifyContent={'flex-end'}>
-        <Button
-          isLoading={isReviewLoading}
-          onPress={() => handleSubmitRating()}
-          buttonTheme={'unstyled'}
-        >
-          {isSubmitted ? `Registrar Estrelas` : `Avaliar sem comentários`}
-        </Button>
-        <Button
-          onPress={handleSubmit(handleSubmitComment)}
-          isDisabled={isReviewLoading}
-          buttonTheme={'whiteTheme'}
-        >
-          Postar
-        </Button>
-      </HStack>
+      <Button
+        onPress={handleSubmit(handleSubmitComment)}
+        isDisabled={isReviewLoading}
+        buttonTheme={'whiteTheme'}
+        alignSelf={'flex-end'}
+      >
+        Postar
+      </Button>
     </AnimatedVstack>
   )
 }

@@ -17,28 +17,30 @@ function SelectFilter() {
       buttonStyle={{
         backgroundColor: theme.colors.gray['600'],
         borderRadius: 4,
-        width: `50%`,
+        width: 'auto',
       }}
       rowTextStyle={{
-        fontSize: 16,
+        fontSize: 12,
       }}
-      buttonTextStyle={{ color: 'white' }}
+      buttonTextStyle={{ fontSize: 0, display: 'none' }}
       dropdownStyle={{
         marginTop: -20,
         backgroundColor: 'white',
         borderRadius: 4,
+        width: 100,
+        marginLeft: -50,
       }}
       defaultValueByIndex={filter === `discover` ? 0 : 1}
       onSelect={(selectedItem, index) => {
-        console.log(selectedItem, index)
         if (index === 0) {
           changeFilterState(`discover`)
         } else {
           changeFilterState(`forme`)
         }
       }}
+      buttonTextAfterSelection={() => ''}
       renderDropdownIcon={() => <FunnelSimple color={`white`} />}
-      dropdownIconPosition={'left'}
+      dropdownIconPosition={'right'}
     />
   )
 }

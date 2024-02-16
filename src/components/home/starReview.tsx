@@ -10,20 +10,17 @@ function StarReview() {
     state: { rating },
     updateRating,
     isReviewLoading,
+    gameToEdit,
   } = React.useContext(ReviewContext)
 
   const stars = []
-
-  function handleRating(){
-
-  }
 
   for (let i = 1; i < 6; i++) {
     stars.push(
       <Pressable
         disabled={isReviewLoading}
         key={i}
-        onPress={() => updateRating(rating === i ? 0 : i)}
+        onPress={() => updateRating(rating === i && !gameToEdit.gameID ? 0 : i)}
         variant={'unstyled'}
         _disabled={{
           opacity: 0.3,
@@ -38,11 +35,7 @@ function StarReview() {
     )
   }
 
-  return (
-    <HStack justifyContent={'center'} my={4}>
-      {stars}
-    </HStack>
-  )
+  return <HStack justifyContent={'center'}>{stars}</HStack>
 }
 
 export default StarReview

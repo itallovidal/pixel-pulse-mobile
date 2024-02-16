@@ -54,7 +54,7 @@ function Catalogue() {
         alignItems={'center'}
         justifyContent={'center'}
       >
-        <Text color={'white'} fontWeight={'bold'} fontSize={32}>
+        <Text mt={6} color={'white'} fontWeight={'bold'} fontSize={32}>
           Meu Catálogo
         </Text>
         <Text color={'white'}> Clique no jogo para mais informações.</Text>
