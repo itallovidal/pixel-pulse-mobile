@@ -11,9 +11,15 @@ export type IAuthRoute = {
 
 export type TAuthRouteNavigatorProps = NativeStackNavigationProp<IAuthRoute>
 
+export interface IGameToEdit {
+  gameID: number
+  stars: number
+  id: string
+}
+
 export type IAPPRoute = {
   home: {
-    gameID: number
+    gameToEdit: IGameToEdit
   }
   profile: undefined
   catalogue: undefined

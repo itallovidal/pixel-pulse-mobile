@@ -51,7 +51,11 @@ function AppRoutes() {
           drawerLabel: `Home`,
         }}
         initialParams={{
-          gameID: 0,
+          gameToEdit: {
+            gameID: 0,
+            stars: 0,
+            id: '',
+          },
         }}
         name={'home'}
         component={Home}

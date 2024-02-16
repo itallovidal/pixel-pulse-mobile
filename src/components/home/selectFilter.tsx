@@ -6,7 +6,10 @@ import { ReviewContext } from '../context/ReviewContext'
 
 function SelectFilter() {
   const { theme } = React.useContext(GlobalContext)
-  const { changeFilterState, filter } = React.useContext(ReviewContext)
+  const {
+    changeFilterState,
+    state: { filter },
+  } = React.useContext(ReviewContext)
 
   return (
     <SelectDropdown

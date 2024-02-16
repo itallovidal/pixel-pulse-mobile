@@ -31,4 +31,3 @@ export function EmptyComment({ opcty }: { opcty: boolean }) {
     </AnimatedCenter>
   )
 }
-

@@ -10,8 +10,12 @@ import { IComment } from '../../@types/game'
 import Loading from '../Loading'
 
 function Review() {
-  const { game, showCommentBox, commentaries, isReviewLoading } =
-    React.useContext(ReviewContext)
+  const {
+    state: { game, commentaries },
+    showCommentBox,
+    isReviewLoading,
+  } = React.useContext(ReviewContext)
+
   React.useEffect(() => {
     if (flatListRef.current) {
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 })

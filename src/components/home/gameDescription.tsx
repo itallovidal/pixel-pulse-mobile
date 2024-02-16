@@ -7,15 +7,13 @@ import { toggleReducer } from '../../utilities/reducers/headerToggleReducer'
 import { ReviewContext } from '../context/ReviewContext'
 
 function GameDescription() {
-  const { game } = React.useContext(ReviewContext)
+  const {
+    state: { game },
+  } = React.useContext(ReviewContext)
   const [state, dispatch] = React.useReducer(toggleReducer, {
     descriptionToggle: false,
     platformsToggle: false,
   })
-
-  if (!game) {
-    return
-  }
 
   return (
     <>

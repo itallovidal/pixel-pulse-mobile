@@ -7,7 +7,9 @@ import { ReviewContext } from '../context/ReviewContext'
 import { GlobalContext } from '../context/globalContextProvider'
 
 function GameBackground() {
-  const { game } = React.useContext(ReviewContext)
+  const {
+    state: { game },
+  } = React.useContext(ReviewContext)
   const { theme } = React.useContext(GlobalContext)
 
   return (

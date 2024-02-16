@@ -14,13 +14,16 @@ import { Api } from '../utilities/api/axios.config'
 import { IRatedGame } from '../@types/game'
 import RatedCard from '../components/catalogue/ratedCard'
 import { useFocusEffect } from '@react-navigation/native'
+import Loading from '../components/Loading'
 
 function Catalogue() {
   const { theme, userToken } = React.useContext(GlobalContext)
   const [games, setGames] = React.useState<IRatedGame[] | undefined>()
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   async function getRatedGames() {
     try {
+      setIsLoading(true)
       const { data } = await Api.get('games/rated', {
         headers: {
           Authorization: `Bearer ${userToken?.accessToken}`,
@@ -30,6 +33,8 @@ function Catalogue() {
       return data as IRatedGame[]
     } catch (e) {
       console.log(e)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -45,29 +50,29 @@ function Catalogue() {
       <VStack
         flex={1}
         bg={theme.colors.gray['700']}
-        p={8}
+        p={4}
         alignItems={'center'}
         justifyContent={'center'}
       >
         <Text color={'white'} fontWeight={'bold'} fontSize={32}>
-          Catálogo!
+          Meu Catálogo
         </Text>
-        <Text color={'white'}> Veja a Lista de jogos avaliados abaixo.</Text>
+        <Text color={'white'}> Clique no jogo para mais informações.</Text>
         <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
-        <FlatList
-          w={'full'}
-          data={games}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item, index }) => (
-            <RatedCard game={item} delay={index * 100} />
-          )}
-        />
+
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            w={'full'}
+            data={games}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item, index }) => (
+              <RatedCard game={item} delay={index * 100} />
+            )}
+          />
+        )}
       </VStack>
-      {/* <Center> */}
-      {/*  <Button w={'1/2'} mt={4}> */}
-      {/*    Voltar{' '} */}
-      {/*  </Button> */}
-      {/* </Center> */}
     </VStack>
   )
 }

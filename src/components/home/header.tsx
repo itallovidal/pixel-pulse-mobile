@@ -22,21 +22,22 @@ import GameBackground from './gameBackground'
 import HomeSkeleton from './homeSkeleton'
 
 function Header() {
-  const { game, updateGame, isReviewLoading, filter } =
-    React.useContext(ReviewContext)
-
-  const { params } = useRoute()
-  const { gameID } = params as { gameID: number }
+  const {
+    state: { filter },
+    updateGame,
+    isReviewLoading,
+    updateRating,
+    gameToEdit,
+  } = React.useContext(ReviewContext)
 
   React.useEffect(() => {
-    if (gameID) {
-      updateGame(filter, gameID)
+    if (gameToEdit.gameID) {
+      console.log('mudou')
+      updateGame(filter, gameToEdit.gameID).then(() => {
+        updateRating(gameToEdit.stars)
+      })
     }
-  }, [gameID])
-
-  if (!game) {
-    return
-  }
+  }, [gameToEdit.gameID])
 
   return (
     <VStack bg={'gray.700'} flex={1}>
