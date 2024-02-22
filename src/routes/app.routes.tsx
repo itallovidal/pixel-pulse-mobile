@@ -6,6 +6,14 @@ import { Button, Image, useTheme } from 'native-base'
 import menuIcon from '../assets/menuIcon.png'
 import Catalogue from '../screens/catalogue'
 import Profile from '../screens/profile'
+import { WishList } from '../screens/wishList'
+import {
+  House,
+  ListChecks,
+  ListPlus,
+  Person,
+  UserCircle,
+} from 'phosphor-react-native'
 
 const { Navigator, Screen } = createDrawerNavigator<IAPPRoute>()
 function AppRoutes() {
@@ -49,20 +57,16 @@ function AppRoutes() {
       <Screen
         options={{
           drawerLabel: `Home`,
+          drawerIcon: () => <House color={'white'} />,
         }}
-        initialParams={{
-          gameToEdit: {
-            gameID: 0,
-            stars: 0,
-            id: '',
-          },
-        }}
+        initialParams={undefined}
         name={'home'}
         component={Home}
       />
       <Screen
         options={{
           drawerLabel: `Perfil`,
+          drawerIcon: () => <UserCircle color={'white'} />,
         }}
         name={'profile'}
         component={Profile}
@@ -70,9 +74,19 @@ function AppRoutes() {
       <Screen
         options={{
           drawerLabel: `Meu Catálogo`,
+          drawerIcon: () => <ListChecks color={'white'} />,
         }}
         name={'catalogue'}
         component={Catalogue}
+      />
+
+      <Screen
+        options={{
+          drawerLabel: `Wish List`,
+          drawerIcon: () => <ListPlus color={'white'} />,
+        }}
+        name={'wishList'}
+        component={WishList}
       />
     </Navigator>
   )

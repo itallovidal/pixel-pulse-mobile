@@ -1,43 +1,29 @@
 import React from 'react'
-import { Center, Icon, View, VStack } from 'native-base'
-import { LinearGradient } from 'expo-linear-gradient'
-import { CaretDown } from 'phosphor-react-native'
-import Button from '../Button'
-import {
-  AnimatedHStack,
-  AnimatedImageBackground,
-  AnimatedVstack,
-} from '../AnimatedComponents'
-import { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
+import { VStack } from 'native-base'
+import { AnimatedVstack } from '../AnimatedComponents'
+import { Layout } from 'react-native-reanimated'
 import { ReviewContext } from '../context/ReviewContext'
-import StarReview from './starReview'
-import SelectFilter from './selectFilter'
-import { useRoute } from '@react-navigation/native'
-import { GlobalContext } from '../context/globalContextProvider'
 
-import Loading from '../Loading'
 import GameDescription from './gameDescription'
 import RatingControls from './ratingControls'
 import GameBackground from './gameBackground'
-import HomeSkeleton from './homeSkeleton'
 
 function Header() {
   const {
     state: { filter },
     updateGame,
     isReviewLoading,
-    updateRating,
-    gameToEdit,
+    homeRouteParams,
   } = React.useContext(ReviewContext)
 
   React.useEffect(() => {
-    if (gameToEdit.gameID) {
-      console.log('mudou')
-      updateGame(filter, gameToEdit.gameID).then(() => {
-        updateRating(gameToEdit.stars)
-      })
+    if (
+      homeRouteParams &&
+      (homeRouteParams.isEditing || homeRouteParams.isWishListed)
+    ) {
+      updateGame(filter, homeRouteParams.gameID)
     }
-  }, [gameToEdit.gameID])
+  }, [homeRouteParams])
 
   return (
     <VStack bg={'gray.700'} flex={1}>

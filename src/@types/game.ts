@@ -123,7 +123,7 @@ interface ICover {
   url: string
 }
 
-export interface IGame {
+export interface IGameData {
   id: number
   cover: ICover
   name: string
@@ -137,6 +137,19 @@ export interface IGame {
     id: number
     name: string
   }[]
+}
+
+export interface IGame {
+  info: IGameData
+  wishList: {
+    isListed: boolean
+    id: string
+  }
+  rating: {
+    isRated: boolean
+    stars: number
+    id: string
+  }
 }
 
 export interface IComment {

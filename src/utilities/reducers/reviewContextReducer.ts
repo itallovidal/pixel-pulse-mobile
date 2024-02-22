@@ -5,6 +5,7 @@ enum EActions {
   'SET_RATING',
   'SET_FILTER',
   'SET_COMMENTARIES',
+  'SET_WISHLIST_INFO',
 }
 type TEnum = keyof typeof EActions
 export interface IReviewReducerActions {
@@ -23,6 +24,17 @@ export function reviewContextReducer(
   state: IReviewReducerState,
   action: IReviewReducerActions,
 ) {
+  if (action.type === 'SET_WISHLIST_INFO') {
+    const { wishList, ...props } = state.game
+    return {
+      ...state,
+      game: {
+        ...props,
+        wishList: action.payload as { id: string; isListed: boolean },
+      },
+    }
+  }
+
   if (action.type === 'SET_GAME') {
     return {
       ...state,
@@ -30,12 +42,13 @@ export function reviewContextReducer(
     }
   }
 
-  if (action.type === 'SET_FILTER') {
-    return {
-      ...state,
-      filter: action.payload as `discover` | `forme`,
+  if (action.type)
+    if (action.type === 'SET_FILTER') {
+      return {
+        ...state,
+        filter: action.payload as `discover` | `forme`,
+      }
     }
-  }
 
   if (action.type === 'SET_RATING') {
     return {

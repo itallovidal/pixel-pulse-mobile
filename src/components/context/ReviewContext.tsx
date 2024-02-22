@@ -23,8 +23,11 @@ interface IReviewContext {
   updateGame: (filter: `discover` | `forme`, gameID?: number) => Promise<void>
   handleSubmitComment: ({ text }: IPostCommentSchema) => Promise<void>
   handleSubmitRating: () => Promise<void>
-  gameToEdit: IGameToEdit
+  homeRouteParams:
+    | undefined
+    | { id: string; isEditing: boolean; isWishListed: boolean; gameID: number }
   handleUpdatedRating: () => Promise<void>
+  handleUpdateWishList: (payload: { isListed: boolean; id: string }) => void
 }
 //
 export const ReviewContext = React.createContext({} as IReviewContext)
@@ -32,7 +35,12 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
   const { showToast, userToken } = React.useContext(GlobalContext)
   const [showCommentBox, setShowCommentBox] = React.useState<boolean>(false)
   const [isReviewLoading, setIsReviewLoading] = React.useState(false)
-  const { gameToEdit } = useRoute().params as { gameToEdit: IGameToEdit }
+  const homeRouteParams = useRoute().params as {
+    id: string
+    isEditing: boolean
+    isWishListed: boolean
+    gameID: number
+  }
 
   const [state, dispatch] = React.useReducer(reviewContextReducer, {
     game: {} as IGame,
@@ -49,7 +57,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     try {
       setIsReviewLoading(true)
       const data = {
-        id: gameToEdit.id,
+        id: homeRouteParams.id,
         stars: state.rating,
       }
 
@@ -69,13 +77,17 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function handleUpdateWishList(payload: { isListed: boolean; id: string }) {
+    dispatch({ type: 'SET_WISHLIST_INFO', payload })
+  }
+
   async function updateGame(filter: `discover` | `forme`, gameID?: number) {
     try {
       setIsReviewLoading(true)
       const game = await getGame(filter, userToken!.accessToken, gameID)
       dispatch({ type: 'SET_GAME', payload: game })
-      updateRating(0)
-      const comments = await getComments(game.id, userToken!.accessToken)
+      updateRating(game.rating.stars ? game.rating.stars : 0)
+      const comments = await getComments(game.info.id, userToken!.accessToken)
       dispatch({ type: 'SET_COMMENTARIES', payload: comments })
     } catch (e) {
     } finally {
@@ -102,7 +114,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       const comments = await submitComment(
         text,
         userToken!.accessToken,
-        state.game.id,
+        state.game.info.id,
       )
 
       dispatch({ type: 'SET_COMMENTARIES', payload: comments })
@@ -122,7 +134,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
   async function handleSubmitRating() {
     try {
       setIsReviewLoading(true)
-      await postRating(state.game.id, state.rating, userToken!.accessToken)
+      await postRating(state.game.info.id, state.rating, userToken!.accessToken)
       await updateGame(state.filter)
       showToast({
         bg: 'green.700',
@@ -139,6 +151,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
   return (
     <ReviewContext.Provider
       value={{
+        handleUpdateWishList,
         handleSubmitComment,
         state,
         isReviewLoading,
@@ -148,7 +161,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
         updateGame,
         handleSubmitRating,
         handleUpdatedRating,
-        gameToEdit,
+        homeRouteParams,
       }}
     >
       {children}

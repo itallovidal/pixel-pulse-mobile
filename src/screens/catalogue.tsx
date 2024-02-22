@@ -15,6 +15,7 @@ import { IRatedGame } from '../@types/game'
 import RatedCard from '../components/catalogue/ratedCard'
 import { useFocusEffect } from '@react-navigation/native'
 import Loading from '../components/Loading'
+import TextHeader from '../components/textHeader'
 
 function Catalogue() {
   const { theme, userToken } = React.useContext(GlobalContext)
@@ -54,11 +55,10 @@ function Catalogue() {
         alignItems={'center'}
         justifyContent={'center'}
       >
-        <Text mt={6} color={'white'} fontWeight={'bold'} fontSize={32}>
-          Meu Catálogo
-        </Text>
-        <Text color={'white'}> Clique no jogo para mais informações.</Text>
-        <Divider my={4} h={1} bg={'red.500'} w={'10%'} />
+        <TextHeader
+          h1={' Meu Catálogo'}
+          h2={'Clique no jogo para mais informações.'}
+        />
 
         {isLoading ? (
           <Loading />

@@ -15,7 +15,7 @@ function RatingControls() {
     isReviewLoading,
     handleUpdatedRating,
     handleSubmitRating,
-    gameToEdit,
+    homeRouteParams,
     state: { filter, rating },
   } = React.useContext(ReviewContext)
   const { navigation } = React.useContext(GlobalContext)
@@ -28,11 +28,10 @@ function RatingControls() {
     }
 
     navigation.setParams({
-      gameToEdit: {
-        stars: 0,
-        id: '',
-        gameID: 0,
-      },
+      id: '',
+      isEditing: false,
+      gameID: 0,
+      isWishListed: false,
     })
   }
 
@@ -41,7 +40,7 @@ function RatingControls() {
   ) : (
     <VStack my={6} space={6}>
       <AnimatedHStack exiting={FadeOut} entering={FadeIn} space={2}>
-        {gameToEdit.gameID > 0 ? (
+        {homeRouteParams?.isEditing ? (
           <>
             <Button
               onPress={() => functionHandleEditControls('update')}
@@ -73,7 +72,7 @@ function RatingControls() {
               flex={1}
               h={`100%`}
             >
-              Não joguei..
+              Próximo
             </Button>
 
             <Button

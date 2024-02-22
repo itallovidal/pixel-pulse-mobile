@@ -10,7 +10,9 @@ import { TAPPNavigatorProps } from '../../routes/routes'
 
 function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
   const { theme } = React.useContext(GlobalContext)
-  const { navigate } = useNavigation<TAPPNavigatorProps>()
+  const {
+    navigation: { navigate },
+  } = React.useContext(GlobalContext)
 
   const stars = []
 
@@ -43,12 +45,11 @@ function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
   return (
     <Pressable
       onPress={() =>
-        navigate(`home`, {
-          gameToEdit: {
-            gameID: game.gameID,
-            stars: game.stars,
-            id: game.id,
-          },
+        navigate('home', {
+          id: game.id,
+          gameID: game.gameID,
+          isEditing: true,
+          isWishListed: false,
         })
       }
       _pressed={{

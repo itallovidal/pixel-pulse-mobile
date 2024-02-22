@@ -17,7 +17,7 @@ function GameBackground() {
       <AnimatedImageBackground
         layout={Layout}
         style={{ width: '100%', height: '100%' }}
-        source={{ uri: `https:${game.cover.url}` }}
+        source={{ uri: `https:${game.info.cover.url}` }}
       >
         <LinearGradient
           colors={['rgba(0,0,0,0)', theme.colors.gray['700']]}

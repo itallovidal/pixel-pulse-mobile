@@ -25,11 +25,11 @@ function GameDescription() {
         fontWeight={'bold'}
         marginLeft={-2}
       >
-        {game.name}
+        {game.info.name}
       </Text>
 
       <Text fontSize={16} mb={2} color={'white'}>
-        {game.releaseDate}
+        {game.info.releaseDate}
       </Text>
 
       <Text
@@ -40,7 +40,7 @@ function GameDescription() {
         }}
         fontSize={16}
       >
-        {formatListOfContents(game.genres)}
+        {formatListOfContents(game.info.genres)}
       </Text>
       <Text
         color={state.platformsToggle ? 'white' : 'gray.300'}
@@ -50,7 +50,7 @@ function GameDescription() {
         }}
         fontSize={16}
       >
-        {formatListOfContents(game.platforms)}
+        {formatListOfContents(game.info.platforms)}
       </Text>
 
       <AnimatedText
@@ -63,7 +63,7 @@ function GameDescription() {
           dispatch({ type: 'description' })
         }}
       >
-        {game.summary}
+        {game.info.summary}
       </AnimatedText>
     </>
   )

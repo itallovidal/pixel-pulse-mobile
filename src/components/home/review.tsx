@@ -20,7 +20,7 @@ function Review() {
     if (flatListRef.current) {
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
     }
-  }, [game?.id])
+  }, [game.info])
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const flatListRef = React.useRef<FlatList>(null)
@@ -36,7 +36,7 @@ function Review() {
 
   return (
     <AnimatedView flex={1}>
-      {game.id ? (
+      {game.info ? (
         <FlatList
           ref={flatListRef}
           ListHeaderComponent={<Header />}

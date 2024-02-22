@@ -18,11 +18,12 @@ export interface IGameToEdit {
 }
 
 export type IAPPRoute = {
-  home: {
-    gameToEdit: IGameToEdit
-  }
+  home:
+    | { id: string; isEditing: boolean; gameID: number; isWishListed: boolean }
+    | undefined
   profile: undefined
   catalogue: undefined
+  wishList: undefined
 }
 
 export type TAPPNavigatorProps = DrawerNavigationProp<IAPPRoute>
