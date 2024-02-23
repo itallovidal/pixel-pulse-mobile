@@ -1,5 +1,8 @@
 import React, { ReactNode } from 'react'
-import { Button as NativeBaseButton, IButtonProps, Text } from 'native-base'
+import { IButtonProps, Text } from 'native-base'
+import { AnimatedButton } from './AnimatedComponents'
+import { LayoutAnimation } from 'react-native'
+import {FadeIn, Layout} from 'react-native-reanimated'
 
 interface IMyButton extends IButtonProps {
   children: string | ReactNode
@@ -31,7 +34,8 @@ const styles = {
 
 function Button({ children, buttonTheme = 'default', ...props }: IMyButton) {
   return (
-    <NativeBaseButton
+    <AnimatedButton
+      layout={FadeIn}
       _pressed={{
         bgColor: styles[buttonTheme].pressed,
       }}
@@ -39,7 +43,7 @@ function Button({ children, buttonTheme = 'default', ...props }: IMyButton) {
       {...props}
     >
       <Text color={styles[buttonTheme].textColor}>{children}</Text>
-    </NativeBaseButton>
+    </AnimatedButton>
   )
 }
 

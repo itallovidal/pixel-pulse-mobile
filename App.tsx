@@ -15,7 +15,7 @@ const config = {
 export default function App() {
   return (
     <NativeBaseProvider config={config} theme={Theme}>
-      <StatusBar style={'light'} />
+      <StatusBar backgroundColor={Theme.colors.red['700']} style={'light'} />
       <NavigationContainer>
         <GlobalContextProvider>
           <Box flex={1} bg={'gray.700'}>

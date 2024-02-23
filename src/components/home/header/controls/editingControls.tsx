@@ -8,6 +8,7 @@ function EditingControls() {
   const {
     updateGame,
     handleUpdatedRating,
+    showCommentBox,
     state: { filter },
   } = React.useContext(ReviewContext)
   const { navigation } = React.useContext(GlobalContext)
@@ -28,7 +29,7 @@ function EditingControls() {
   }
 
   return (
-    <HStack space={2}>
+    <HStack opacity={showCommentBox ? 0.3 : 1} space={2}>
       <Button
         onPress={() => functionHandleEditControls('update')}
         buttonTheme={'unstyled'}

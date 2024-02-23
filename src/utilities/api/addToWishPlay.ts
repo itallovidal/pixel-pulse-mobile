@@ -1,6 +1,8 @@
 import { Api } from './axios.config'
 
 export async function addToWishPlay(accessToken: string, gameID: number) {
+  console.log(gameID)
+
   const response = await Api.post(
     `/games/wishPlay/${gameID}`,
     {},

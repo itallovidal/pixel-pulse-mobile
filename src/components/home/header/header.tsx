@@ -1,17 +1,25 @@
 import React from 'react'
-import { VStack } from 'native-base'
-import { AnimatedVstack } from '../../AnimatedComponents'
-import { Layout } from 'react-native-reanimated'
+import { Divider, HStack, VStack } from 'native-base'
+import { AnimatedHStack, AnimatedVstack } from '../../AnimatedComponents'
+import {
+  FadeInDown,
+  Layout,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import { ReviewContext } from '../../context/ReviewContext'
 
 import GameDescription from '../gameDescription'
 import Controls from '../controls'
 import GameBackground from './gameBackground'
-import StarReview from './starReview'
+
+import WishListButton from './rating/wishListButton'
+import { StarsRating } from './rating/starsRating'
 
 function Header() {
+  const opcty = useSharedValue(0)
   const {
-    state: { filter },
+    state: { filter, game },
     updateGame,
     isReviewLoading,
     homeRouteParams,
@@ -26,19 +34,35 @@ function Header() {
     }
   }, [homeRouteParams])
 
+  opcty.value = isReviewLoading ? withSpring(0.4) : withSpring(1)
+
   return (
     <VStack bg={'gray.700'} flex={1}>
       <GameBackground />
       <AnimatedVstack
-        layout={Layout}
-        opacity={isReviewLoading ? 0.4 : 1}
+        style={{
+          opacity: opcty,
+        }}
         flex={1}
         px={8}
         pt={'56'}
       >
         <GameDescription />
         <Controls />
-        <StarReview />
+        <AnimatedHStack
+          layout={FadeInDown}
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+          <WishListButton />
+
+          {!game.wishList.isListed ? (
+            <>
+              <Divider mx={5} bg={'white'} orientation={'vertical'} />
+              <StarsRating />
+            </>
+          ) : null}
+        </AnimatedHStack>
       </AnimatedVstack>
     </VStack>
   )

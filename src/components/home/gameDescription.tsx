@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'native-base'
+import {Text, VStack} from 'native-base'
 import { formatListOfContents } from '../../utilities/methods'
 import { AnimatedText } from '../AnimatedComponents'
 import { FadeIn } from 'react-native-reanimated'
@@ -16,7 +16,7 @@ function GameDescription() {
   })
 
   return (
-    <>
+    <VStack mb={4}>
       <Text
         pl={2}
         numberOfLines={2}
@@ -65,7 +65,7 @@ function GameDescription() {
       >
         {game.info.summary}
       </AnimatedText>
-    </>
+    </VStack>
   )
 }
 

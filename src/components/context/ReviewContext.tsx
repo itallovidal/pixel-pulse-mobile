@@ -89,6 +89,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       updateRating(game.rating.stars ? game.rating.stars : 0)
       const comments = await getComments(game.info.id, userToken!.accessToken)
       dispatch({ type: 'SET_COMMENTARIES', payload: comments })
+      setShowCommentBox(false)
     } catch (e) {
     } finally {
       setIsReviewLoading(false)
@@ -100,11 +101,6 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
   }
 
   function updateRating(star: number) {
-    if (star === 0) {
-      setShowCommentBox(false)
-    } else {
-      setShowCommentBox(true)
-    }
     dispatch({ type: 'SET_RATING', payload: star })
   }
 
@@ -135,7 +131,13 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     try {
       setIsReviewLoading(true)
       await postRating(state.game.info.id, state.rating, userToken!.accessToken)
-      await updateGame(state.filter)
+      if (state.game.rating.stars === 0) {
+        setShowCommentBox(false)
+      } else {
+        setShowCommentBox(true)
+      }
+
+      // await updateGame(state.filter)
       showToast({
         bg: 'green.700',
         placement: 'top',

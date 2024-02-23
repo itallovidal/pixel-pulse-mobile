@@ -48,7 +48,7 @@ function AppRoutes() {
           drawerLabelStyle: {
             color: 'white',
           },
-          drawerActiveTintColor: theme.colors.gray['700'],
+          drawerActiveTintColor: theme.colors.red['200'],
           headerTransparent: true,
           headerTitle: '',
         }

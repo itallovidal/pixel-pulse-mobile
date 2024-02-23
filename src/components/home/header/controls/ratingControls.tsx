@@ -3,20 +3,20 @@ import SelectFilter from '../../selectFilter'
 import React from 'react'
 import { HStack } from 'native-base'
 import { ReviewContext } from '../../../context/ReviewContext'
-import { GlobalContext } from '../../../context/globalContextProvider'
 
 function RatingControls() {
   const {
     updateGame,
-    isReviewLoading,
     handleSubmitRating,
-    state: { filter, rating },
+    showCommentBox,
+    state: { filter, rating, game },
   } = React.useContext(ReviewContext)
 
   return (
-    <HStack space={2}>
+    <HStack opacity={showCommentBox ? 0.3 : 1} space={2}>
       <Button
-        isDisabled={rating > 0}
+        display={showCommentBox ? 'none' : 'initial'}
+        isDisabled={showCommentBox || rating > 0}
         onPress={() => updateGame(filter)}
         buttonTheme={'unstyled'}
         bg={'gray.600'}
@@ -27,14 +27,13 @@ function RatingControls() {
       </Button>
 
       <Button
-        isDisabled={rating === 0}
-        isLoading={isReviewLoading}
+        isDisabled={showCommentBox || rating === 0 || game.wishList.isListed }
         bg={'red.600'}
         flex={1}
         onPress={() => handleSubmitRating()}
         buttonTheme={'unstyled'}
       >
-        Avaliar
+        {showCommentBox ? 'Avaliado com Sucesso!' : 'Avaliar'}
       </Button>
 
       <SelectFilter />

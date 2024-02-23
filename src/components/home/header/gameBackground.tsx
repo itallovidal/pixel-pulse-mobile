@@ -15,8 +15,9 @@ function GameBackground() {
   return (
     <View position={'absolute'} w={'full'} h={'60%'}>
       <AnimatedImageBackground
+        // resizeMode={'contain'}
         layout={Layout}
-        style={{ width: '100%', height: '100%' }}
+        style={{ marginTop: 20, width: '100%', height: '100%' }}
         source={{ uri: `https:${game.info.cover.url}` }}
       >
         <LinearGradient

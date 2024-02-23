@@ -14,11 +14,5 @@ export async function getGame(
     },
   })
 
-  console.log('----------------')
-  console.log('----------------')
-  console.log(data)
-  console.log('----------------')
-  console.log('----------------')
-
   return data as IGame
 }

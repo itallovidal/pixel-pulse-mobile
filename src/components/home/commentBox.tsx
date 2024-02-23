@@ -13,8 +13,12 @@ import {
 } from '../../schemas/postCommentSchema'
 
 function CommentBox() {
-  const { isReviewLoading, handleSubmitComment } =
-    React.useContext(ReviewContext)
+  const {
+    isReviewLoading,
+    updateGame,
+    state: { filter },
+    handleSubmitComment,
+  } = React.useContext(ReviewContext)
   const {
     control,
     handleSubmit,
@@ -54,10 +58,10 @@ function CommentBox() {
             autoCompleteType
             variant={'unstyled'}
             placeholder={'Digite um breve comentário.'}
-            borderWidth={2}
+            borderWidth={errors.text ? 2 : 0}
             bgColor={'gray.400'}
-            mb={4}
-            p={4}
+            mb={2}
+            p={2}
             color={'white'}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -66,14 +70,25 @@ function CommentBox() {
         )}
       />
 
-      <Button
-        onPress={handleSubmit(handleSubmitComment)}
-        isDisabled={isReviewLoading}
-        buttonTheme={'whiteTheme'}
-        alignSelf={'flex-end'}
-      >
-        Postar
-      </Button>
+      <HStack justifyContent={'flex-end'} space={2}>
+        <Button
+          onPress={() => updateGame(filter)}
+          buttonTheme={'unstyled'}
+          bg={'gray.600'}
+          h={`100%`}
+        >
+          Próximo jogo
+        </Button>
+
+        <Button
+          onPress={handleSubmit(handleSubmitComment)}
+          isDisabled={isReviewLoading}
+          buttonTheme={'whiteTheme'}
+          alignSelf={'flex-end'}
+        >
+          Postar
+        </Button>
+      </HStack>
     </AnimatedVstack>
   )
 }
