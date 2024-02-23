@@ -1,12 +1,13 @@
 import React from 'react'
 import { VStack } from 'native-base'
-import { AnimatedVstack } from '../AnimatedComponents'
+import { AnimatedVstack } from '../../AnimatedComponents'
 import { Layout } from 'react-native-reanimated'
-import { ReviewContext } from '../context/ReviewContext'
+import { ReviewContext } from '../../context/ReviewContext'
 
-import GameDescription from './gameDescription'
-import RatingControls from './ratingControls'
+import GameDescription from '../gameDescription'
+import Controls from '../controls'
 import GameBackground from './gameBackground'
+import StarReview from './starReview'
 
 function Header() {
   const {
@@ -36,7 +37,8 @@ function Header() {
         pt={'56'}
       >
         <GameDescription />
-        <RatingControls />
+        <Controls />
+        <StarReview />
       </AnimatedVstack>
     </VStack>
   )

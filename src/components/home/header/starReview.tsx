@@ -1,10 +1,10 @@
 import React from 'react'
 import { Divider, HStack, Icon, Pressable } from 'native-base'
 import { GameController, Star } from 'phosphor-react-native'
-import { GlobalContext } from '../context/globalContextProvider'
-import { ReviewContext } from '../context/ReviewContext'
-import { addToWishPlay } from '../../utilities/api/addToWishPlay'
-import { removeFromWishPlay } from '../../utilities/api/removeFromWishPlay'
+import { GlobalContext } from '../../context/globalContextProvider'
+import { ReviewContext } from '../../context/ReviewContext'
+import { addToWishPlay } from '../../../utilities/api/addToWishPlay'
+import { removeFromWishPlay } from '../../../utilities/api/removeFromWishPlay'
 
 function StarReview() {
   const { theme, userToken, showToast } = React.useContext(GlobalContext)

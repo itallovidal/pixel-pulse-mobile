@@ -21,9 +21,6 @@ export function EmptyComment({ opcty }: { opcty: boolean }) {
   return (
     <AnimatedCenter style={[animatedStyle]} px={4} my={6}>
       <ChatCircleDots size={64} color={'white'} />
-      <Text fontWeight={'bold'} color={'white'}>
-        First!
-      </Text>
       <Text mt={4} color={'white'}>
         Nenhum comentário por enquanto.
       </Text>

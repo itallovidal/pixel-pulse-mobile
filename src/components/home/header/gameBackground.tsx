@@ -1,10 +1,10 @@
 import React from 'react'
 import { View } from 'native-base'
-import { AnimatedImageBackground } from '../AnimatedComponents'
+import { AnimatedImageBackground } from '../../AnimatedComponents'
 import { Layout } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ReviewContext } from '../context/ReviewContext'
-import { GlobalContext } from '../context/globalContextProvider'
+import { ReviewContext } from '../../context/ReviewContext'
+import { GlobalContext } from '../../context/globalContextProvider'
 
 function GameBackground() {
   const {
