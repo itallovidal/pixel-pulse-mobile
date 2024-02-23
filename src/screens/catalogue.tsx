@@ -3,7 +3,7 @@ import { FlatList, VStack } from 'native-base'
 
 import { GlobalContext } from '../components/context/globalContextProvider'
 import { Api } from '../utilities/api/axios.config'
-import { IRatedGame } from '../@types/game'
+import { IRatedData, IRatedGame } from '../@types/game'
 import RatedCard from '../components/catalogue/ratedCard'
 import { useFocusEffect } from '@react-navigation/native'
 import Loading from '../components/Loading'
@@ -11,33 +11,59 @@ import TextHeader from '../components/textHeader'
 import EmptyCatalogue from '../components/catalogue/emptyCatalogue'
 import { AnimatedFlatlist } from '../components/AnimatedComponents'
 import { FadeInDown } from 'react-native-reanimated'
+import { getRatedGames } from '../utilities/api/getRatedGames'
 
 function Catalogue() {
-  const { theme, userToken } = React.useContext(GlobalContext)
-  const [games, setGames] = React.useState<IRatedGame[] | undefined>()
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const { theme, userToken, showToast } = React.useContext(GlobalContext)
+  const [rated, setRated] = React.useState<IRatedData>({
+    games: [],
+    page: 0,
+  })
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
-  async function getRatedGames() {
+  async function handleRatedGames(page: number) {
     try {
-      setIsLoading(true)
-      const { data } = await Api.get('games/rated', {
-        headers: {
-          Authorization: `Bearer ${userToken?.accessToken}`,
-        },
-      })
+      const response = await getRatedGames(userToken!.accessToken, page)
 
-      return data as IRatedGame[]
+      if (response.length === 0) {
+        showToast({
+          bg: 'red.600',
+          placement: 'top',
+          title: 'Sem mais jogos para carregar.',
+        })
+
+        return
+      }
+
+      if (page !== 0)
+        showToast({
+          bg: 'green.600',
+          placement: 'top',
+          title: 'Jogos carregados!',
+        })
+
+      const gamesObject = {
+        page,
+        games: [...rated.games, ...response],
+      }
+
+      setRated(gamesObject)
     } catch (e) {
       console.log(e)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   useFocusEffect(
     useCallback(() => {
-      console.log('catalogo')
-      getRatedGames().then((data) => setGames(data))
+      setIsLoading(true)
+      handleRatedGames(0).then(() => setIsLoading(false))
+
+      return () => {
+        setRated({
+          games: [],
+          page: 0,
+        })
+      }
     }, []),
   )
 
@@ -59,10 +85,11 @@ function Catalogue() {
           <Loading />
         ) : (
           <AnimatedFlatlist
+            onEndReached={() => handleRatedGames(rated?.page + 10)}
             entering={FadeInDown}
             w={'full'}
             ListEmptyComponent={<EmptyCatalogue />}
-            data={games}
+            data={rated?.games}
             keyExtractor={(item) => {
               // @ts-ignore
               return item.id.toString()
@@ -78,3 +105,11 @@ function Catalogue() {
 }
 
 export default Catalogue
+
+// setPage((prev) => {
+//   if (prev === 0) {
+//     return 10
+//   }
+//
+//   return prev + 10
+// })

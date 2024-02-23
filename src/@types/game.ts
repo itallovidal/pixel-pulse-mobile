@@ -185,3 +185,8 @@ export interface IRatedGame {
   gameID: number
   created_at: Date
 }
+
+export interface IRatedData {
+  games: IRatedGame[]
+  page: number
+}

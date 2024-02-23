@@ -1,7 +1,7 @@
 import Button from '../../../Button'
 import SelectFilter from '../../selectFilter'
 import React from 'react'
-import { HStack } from 'native-base'
+import { Box, HStack } from 'native-base'
 import { ReviewContext } from '../../../context/ReviewContext'
 
 function RatingControls() {
@@ -26,17 +26,24 @@ function RatingControls() {
         Próximo
       </Button>
 
-      <Button
-        isDisabled={showCommentBox || rating === 0 || game.wishList.isListed}
-        bg={'red.600'}
+      <Box
         flex={1}
-        onPress={() => handleSubmitRating()}
-        buttonTheme={'unstyled'}
+        opacity={
+          showCommentBox || rating === 0 || game.wishList.isListed ? 0.4 : 1
+        }
       >
-        {game.wishList.isListed && 'Retire da Lista'}
-        {!game.wishList.isListed && showCommentBox && 'Avaliado com Sucesso!'}
-        {!game.wishList.isListed && !showCommentBox && 'Avaliar'}
-      </Button>
+        <Button
+          isDisabled={showCommentBox || rating === 0 || game.wishList.isListed}
+          bg={'red.600'}
+          flex={1}
+          onPress={() => handleSubmitRating()}
+          buttonTheme={'unstyled'}
+        >
+          {game.wishList.isListed && 'Retire da Lista'}
+          {!game.wishList.isListed && showCommentBox && 'Avaliado com Sucesso!'}
+          {!game.wishList.isListed && !showCommentBox && 'Avaliar'}
+        </Button>
+      </Box>
 
       <SelectFilter />
     </HStack>

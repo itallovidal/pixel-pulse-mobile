@@ -28,7 +28,9 @@ export function StarsRating() {
         key={i}
         onPress={() =>
           updateRating(
-            rating === i && !homeRouteParams?.gameID && !showCommentBox ? 0 : i,
+            rating === i && !homeRouteParams?.isEditing && !showCommentBox
+              ? 0
+              : i,
           )
         }
         variant={'unstyled'}
