@@ -27,13 +27,15 @@ function RatingControls() {
       </Button>
 
       <Button
-        isDisabled={showCommentBox || rating === 0 || game.wishList.isListed }
+        isDisabled={showCommentBox || rating === 0 || game.wishList.isListed}
         bg={'red.600'}
         flex={1}
         onPress={() => handleSubmitRating()}
         buttonTheme={'unstyled'}
       >
-        {showCommentBox ? 'Avaliado com Sucesso!' : 'Avaliar'}
+        {game.wishList.isListed && 'Retire da Lista'}
+        {!game.wishList.isListed && showCommentBox && 'Avaliado com Sucesso!'}
+        {!game.wishList.isListed && !showCommentBox && 'Avaliar'}
       </Button>
 
       <SelectFilter />

@@ -26,11 +26,14 @@ function Header() {
   } = React.useContext(ReviewContext)
 
   React.useEffect(() => {
-    if (
-      homeRouteParams &&
-      (homeRouteParams.isEditing || homeRouteParams.isWishListed)
-    ) {
-      updateGame(filter, homeRouteParams.gameID)
+    if (!homeRouteParams) return
+
+    if (homeRouteParams.isEditing) {
+      updateGame(filter, homeRouteParams.gameID, 'isEditing')
+    }
+
+    if (homeRouteParams.isWishListed) {
+      updateGame(filter, homeRouteParams.gameID, 'isWished')
     }
   }, [homeRouteParams])
 

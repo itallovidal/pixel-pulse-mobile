@@ -1,14 +1,6 @@
 import React, { useCallback } from 'react'
-import {
-  Center,
-  Divider,
-  FlatList,
-  ScrollView,
-  Text,
-  VStack,
-} from 'native-base'
+import { FlatList, VStack } from 'native-base'
 
-import Button from '../components/Button'
 import { GlobalContext } from '../components/context/globalContextProvider'
 import { Api } from '../utilities/api/axios.config'
 import { IRatedGame } from '../@types/game'
@@ -16,6 +8,9 @@ import RatedCard from '../components/catalogue/ratedCard'
 import { useFocusEffect } from '@react-navigation/native'
 import Loading from '../components/Loading'
 import TextHeader from '../components/textHeader'
+import EmptyCatalogue from '../components/catalogue/emptyCatalogue'
+import { AnimatedFlatlist } from '../components/AnimatedComponents'
+import { FadeInDown } from 'react-native-reanimated'
 
 function Catalogue() {
   const { theme, userToken } = React.useContext(GlobalContext)
@@ -63,12 +58,17 @@ function Catalogue() {
         {isLoading ? (
           <Loading />
         ) : (
-          <FlatList
+          <AnimatedFlatlist
+            entering={FadeInDown}
             w={'full'}
+            ListEmptyComponent={<EmptyCatalogue />}
             data={games}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => {
+              // @ts-ignore
+              return item.id.toString()
+            }}
             renderItem={({ item, index }) => (
-              <RatedCard game={item} delay={index * 100} />
+              <RatedCard game={item as IRatedGame} delay={index * 100} />
             )}
           />
         )}

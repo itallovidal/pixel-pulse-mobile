@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { IButtonProps, Text } from 'native-base'
 import { AnimatedButton } from './AnimatedComponents'
 import { LayoutAnimation } from 'react-native'
-import {FadeIn, Layout} from 'react-native-reanimated'
+import { FadeIn, Layout } from 'react-native-reanimated'
 
 interface IMyButton extends IButtonProps {
   children: string | ReactNode
@@ -35,11 +35,11 @@ const styles = {
 function Button({ children, buttonTheme = 'default', ...props }: IMyButton) {
   return (
     <AnimatedButton
+      bg={styles[buttonTheme].bg}
       layout={FadeIn}
       _pressed={{
         bgColor: styles[buttonTheme].pressed,
       }}
-      bg={styles[buttonTheme].bg}
       {...props}
     >
       <Text color={styles[buttonTheme].textColor}>{children}</Text>

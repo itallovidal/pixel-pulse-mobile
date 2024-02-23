@@ -5,8 +5,6 @@ import { AnimatedHStack } from '../AnimatedComponents'
 import { GlobalContext } from '../context/globalContextProvider'
 import { GENRES, IRatedGame } from '../../@types/game'
 import { FadeIn } from 'react-native-reanimated'
-import { useNavigation } from '@react-navigation/native'
-import { TAPPNavigatorProps } from '../../routes/routes'
 
 function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
   const { theme } = React.useContext(GlobalContext)

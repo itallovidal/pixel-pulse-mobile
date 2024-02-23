@@ -1,18 +1,13 @@
 import React from 'react'
-import { FlatList } from 'native-base'
 import Header from './header/header'
-import Comment from './comment'
+import Comment from './commentary/comment'
 import { ReviewContext } from '../context/ReviewContext'
-import CommentBox from './commentBox'
-import {
-  AnimatedFlatlist,
-  AnimatedView,
-  AnimatedVstack,
-} from '../AnimatedComponents'
-import { EmptyComment } from './emptyComment'
+import CommentBox from './commentary/commentBox'
+import { AnimatedFlatlist, AnimatedVstack } from '../AnimatedComponents'
+import { EmptyComment } from './commentary/emptyComment'
 import { IComment } from '../../@types/game'
 import Loading from '../Loading'
-import {FadeInDown, FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
+import { FadeInUp } from 'react-native-reanimated'
 
 function FlatListContainer() {
   const {
@@ -46,7 +41,6 @@ function FlatListContainer() {
       flex={1}
     >
       <AnimatedFlatlist
-        // layout={FadeInDown}
         ref={flatListRef}
         ListHeaderComponent={<Header />}
         data={commentaries}

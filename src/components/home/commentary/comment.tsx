@@ -9,18 +9,18 @@ import {
   useTheme,
 } from 'native-base'
 import { ThumbsDown, ThumbsUp } from 'phosphor-react-native'
-import placeholder from '../../assets/fotoplaceholder.png'
+import placeholder from '../../../assets/fotoplaceholder.png'
 import Animated, {
   FadeIn,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import { AnimatedHStack } from '../AnimatedComponents'
-import { ReviewContext } from '../context/ReviewContext'
-import { GlobalContext } from '../context/globalContextProvider'
-import { IComment } from '../../@types/game'
-import { getGenreName } from '../../utilities/methods'
+import { AnimatedHStack } from '../../AnimatedComponents'
+import { ReviewContext } from '../../context/ReviewContext'
+import { GlobalContext } from '../../context/globalContextProvider'
+import { IComment } from '../../../@types/game'
+import { getGenreName } from '../../../utilities/methods'
 
 function Comment({ opcty, data }: { opcty: boolean; data: IComment }) {
   const opacityValue = useSharedValue(0.2)
@@ -36,12 +36,7 @@ function Comment({ opcty, data }: { opcty: boolean; data: IComment }) {
   const comments = getGenreName([data.user.favGenre1, data.user.favGenre2])
 
   return (
-    <AnimatedHStack
-      entering={FadeIn.delay(100)}
-      style={[animatedStyle]}
-      px={4}
-      my={4}
-    >
+    <AnimatedHStack entering={FadeIn} style={[animatedStyle]} px={4} my={4}>
       <Image
         mr={2}
         w={60}

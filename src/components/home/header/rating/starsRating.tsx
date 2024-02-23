@@ -19,10 +19,17 @@ export function StarsRating() {
   for (let i = 1; i < 6; i++) {
     stars.push(
       <Pressable
-        isDisabled={isReviewLoading || game.wishList.isListed || showCommentBox}
+        isDisabled={
+          isReviewLoading ||
+          game.wishList.isListed ||
+          (showCommentBox &&
+            (homeRouteParams === undefined || !homeRouteParams.isEditing))
+        }
         key={i}
         onPress={() =>
-          updateRating(rating === i && !homeRouteParams?.gameID ? 0 : i)
+          updateRating(
+            rating === i && !homeRouteParams?.gameID && !showCommentBox ? 0 : i,
+          )
         }
         variant={'unstyled'}
         _disabled={{

@@ -8,7 +8,9 @@ function EditingControls() {
   const {
     updateGame,
     handleUpdatedRating,
+    isReviewLoading,
     showCommentBox,
+    homeRouteParams,
     state: { filter },
   } = React.useContext(ReviewContext)
   const { navigation } = React.useContext(GlobalContext)
@@ -29,8 +31,16 @@ function EditingControls() {
   }
 
   return (
-    <HStack opacity={showCommentBox ? 0.3 : 1} space={2}>
+    <HStack
+      opacity={
+        homeRouteParams && !homeRouteParams.isEditing && showCommentBox
+          ? 0.3
+          : 1
+      }
+      space={2}
+    >
       <Button
+        isDisabled={isReviewLoading}
         onPress={() => functionHandleEditControls('update')}
         buttonTheme={'unstyled'}
         bg={'gray.600'}
@@ -41,6 +51,7 @@ function EditingControls() {
       </Button>
 
       <Button
+        isDisabled={isReviewLoading}
         onPress={() => functionHandleEditControls('next')}
         buttonTheme={'unstyled'}
         bg={'red.600'}

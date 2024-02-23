@@ -10,8 +10,7 @@ import { getGame } from '../../utilities/api/getGame'
 import { getComments } from '../../utilities/api/getComments'
 import { submitComment } from '../../utilities/api/submitComment'
 import { postRating } from '../../utilities/api/submitRating'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import { IGameToEdit, TAPPNavigatorProps } from '../../routes/routes'
+import { useRoute } from '@react-navigation/native'
 import { submitUpdatedRating } from '../../utilities/api/submitUpdatedRating'
 
 interface IReviewContext {
@@ -20,7 +19,11 @@ interface IReviewContext {
   isReviewLoading: boolean
   updateRating: (star: number) => void
   changeFilterState: (state: `discover` | `forme`) => void
-  updateGame: (filter: `discover` | `forme`, gameID?: number) => Promise<void>
+  updateGame: (
+    filter: `discover` | `forme`,
+    gameID?: number,
+    state?: 'isEditing' | 'isWished',
+  ) => Promise<void>
   handleSubmitComment: ({ text }: IPostCommentSchema) => Promise<void>
   handleSubmitRating: () => Promise<void>
   homeRouteParams:
@@ -62,7 +65,6 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       }
 
       await submitUpdatedRating(data)
-
       await updateGame(state.filter)
 
       showToast({
@@ -72,8 +74,6 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
       })
     } catch (e) {
       console.log(e)
-    } finally {
-      setIsReviewLoading(false)
     }
   }
 
@@ -81,14 +81,24 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_WISHLIST_INFO', payload })
   }
 
-  async function updateGame(filter: `discover` | `forme`, gameID?: number) {
+  async function updateGame(
+    filter: `discover` | `forme`,
+    gameID?: number,
+    state?: 'isEditing' | 'isWished',
+  ) {
     try {
       setIsReviewLoading(true)
       const game = await getGame(filter, userToken!.accessToken, gameID)
       dispatch({ type: 'SET_GAME', payload: game })
-      updateRating(game.rating.stars ? game.rating.stars : 0)
+
       const comments = await getComments(game.info.id, userToken!.accessToken)
       dispatch({ type: 'SET_COMMENTARIES', payload: comments })
+
+      updateRating(game.rating.stars ? game.rating.stars : 0)
+      if (gameID && state === 'isEditing') {
+        setShowCommentBox(true)
+        return
+      }
       setShowCommentBox(false)
     } catch (e) {
     } finally {
@@ -137,7 +147,6 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
         setShowCommentBox(true)
       }
 
-      // await updateGame(state.filter)
       showToast({
         bg: 'green.700',
         placement: 'top',

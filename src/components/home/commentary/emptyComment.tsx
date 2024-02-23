@@ -1,7 +1,7 @@
 import React from 'react'
 import { Center, Text } from 'native-base'
 import { ChatCircleDots } from 'phosphor-react-native'
-import { AnimatedCenter } from '../AnimatedComponents'
+import { AnimatedCenter } from '../../AnimatedComponents'
 import {
   useAnimatedStyle,
   useSharedValue,

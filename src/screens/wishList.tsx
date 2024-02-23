@@ -18,6 +18,8 @@ import Loading from '../components/Loading'
 import { WishCard } from '../components/wishList/wishCard'
 import TextHeader from '../components/textHeader'
 import { getWishedGames } from '../utilities/api/getWishedGames'
+import { EmptyWishList } from '../components/wishList/emptyWishList'
+import { AnimatedFlatlist } from '../components/AnimatedComponents'
 
 export function WishList() {
   const { userToken } = React.useContext(GlobalContext)
@@ -56,14 +58,18 @@ export function WishList() {
       {isLoading ? (
         <Loading />
       ) : (
-        <FlatList
+        <AnimatedFlatlist
+          ListEmptyComponent={<EmptyWishList />}
           w={'full'}
           data={games}
           showsVerticalScrollIndicator={false}
           numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => {
+            // @ts-ignore
+            return item.id.toString()
+          }}
           renderItem={({ item, index }) => (
-            <WishCard game={item} delay={index * 100} />
+            <WishCard game={item as IRatedGame} delay={index * 100} />
           )}
         />
       )}

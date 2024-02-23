@@ -1,16 +1,16 @@
 import React from 'react'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { HStack, TextArea } from 'native-base'
-import Button from '../Button'
-import { AnimatedVstack } from '../AnimatedComponents'
-import { ReviewContext } from '../context/ReviewContext'
+import Button from '../../Button'
+import { AnimatedVstack } from '../../AnimatedComponents'
+import { ReviewContext } from '../../context/ReviewContext'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import ErrorText from '../ErrorText'
+import ErrorText from '../../ErrorText'
 import {
   IPostCommentSchema,
   postCommentSchema,
-} from '../../schemas/postCommentSchema'
+} from '../../../schemas/postCommentSchema'
 
 function CommentBox() {
   const {
@@ -18,6 +18,7 @@ function CommentBox() {
     updateGame,
     state: { filter },
     handleSubmitComment,
+    homeRouteParams,
   } = React.useContext(ReviewContext)
   const {
     control,
@@ -34,7 +35,7 @@ function CommentBox() {
 
   return (
     <AnimatedVstack
-      entering={FadeInDown.duration(300).delay(300)}
+      entering={FadeInDown.duration(300)}
       exiting={FadeOut}
       p={4}
       bg={'gray.700'}
@@ -61,7 +62,7 @@ function CommentBox() {
             borderWidth={errors.text ? 2 : 0}
             bgColor={'gray.400'}
             mb={2}
-            p={2}
+            p={4}
             color={'white'}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -71,14 +72,16 @@ function CommentBox() {
       />
 
       <HStack justifyContent={'flex-end'} space={2}>
-        <Button
-          onPress={() => updateGame(filter)}
-          buttonTheme={'unstyled'}
-          bg={'gray.600'}
-          h={`100%`}
-        >
-          Próximo jogo
-        </Button>
+        {homeRouteParams === undefined || !homeRouteParams.isEditing ? (
+          <Button
+            onPress={() => updateGame(filter)}
+            buttonTheme={'unstyled'}
+            bg={'gray.600'}
+            h={`100%`}
+          >
+            Próximo jogo
+          </Button>
+        ) : null}
 
         <Button
           onPress={handleSubmit(handleSubmitComment)}
