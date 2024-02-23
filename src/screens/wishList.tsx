@@ -1,18 +1,8 @@
 import React, { useCallback } from 'react'
-import {
-  Center,
-  Divider,
-  FlatList,
-  ScrollView,
-  Text,
-  VStack,
-} from 'native-base'
+import { VStack } from 'native-base'
 
-import Button from '../components/Button'
 import { GlobalContext } from '../components/context/globalContextProvider'
-import { Api } from '../utilities/api/axios.config'
-import { IRatedGame } from '../@types/game'
-import RatedCard from '../components/catalogue/ratedCard'
+import { IRatedData, IRatedGame } from '../@types/game'
 import { useFocusEffect } from '@react-navigation/native'
 import Loading from '../components/Loading'
 import { WishCard } from '../components/wishList/wishCard'
@@ -22,26 +12,49 @@ import { EmptyWishList } from '../components/wishList/emptyWishList'
 import { AnimatedFlatlist } from '../components/AnimatedComponents'
 
 export function WishList() {
-  const { userToken } = React.useContext(GlobalContext)
-  const [games, setGames] = React.useState<IRatedGame[] | undefined>()
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const { userToken, showToast } = React.useContext(GlobalContext)
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
+  const [wished, setWished] = React.useState<IRatedData>({
+    games: [],
+    page: 0,
+  })
 
-  async function handleGetWishedGames() {
+  async function handleGetWishedGames(page: number) {
     try {
-      setIsLoading(true)
-      const data = await getWishedGames(userToken!.accessToken)
-      return data as IRatedGame[]
+      const response = await getWishedGames(userToken!.accessToken, page)
+
+      if (response.length === 0) {
+        showToast({
+          bg: 'red.600',
+          placement: 'top',
+          title: 'Sem mais jogos para carregar.',
+        })
+
+        return
+      }
+
+      if (page !== 0)
+        showToast({
+          bg: 'green.600',
+          placement: 'top',
+          title: 'Jogos carregados!',
+        })
+
+      const gamesObject = {
+        page,
+        games: [...wished.games, ...response],
+      }
+
+      setWished(gamesObject)
     } catch (e) {
       console.log(e)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   useFocusEffect(
     useCallback(() => {
-      console.log('wish')
-      handleGetWishedGames().then((data) => setGames(data))
+      setIsLoading(true)
+      handleGetWishedGames(0).then(() => setIsLoading(false))
     }, []),
   )
 
@@ -59,9 +72,10 @@ export function WishList() {
         <Loading />
       ) : (
         <AnimatedFlatlist
+          onEndReached={() => handleGetWishedGames(wished?.page + 10)}
           ListEmptyComponent={<EmptyWishList />}
           w={'full'}
-          data={games}
+          data={wished.games}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           keyExtractor={(item) => {

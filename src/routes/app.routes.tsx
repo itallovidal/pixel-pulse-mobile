@@ -2,15 +2,17 @@ import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import Home from '../screens/home'
 import { IAPPRoute } from './routes'
-import { Button, Image, useTheme } from 'native-base'
+import { Button, Icon, Image, useTheme } from 'native-base'
 import menuIcon from '../assets/menuIcon.png'
 import Catalogue from '../screens/catalogue'
 import Profile from '../screens/profile'
 import { WishList } from '../screens/wishList'
 import {
   House,
+  List,
   ListChecks,
   ListPlus,
+  MagnifyingGlass,
   Person,
   UserCircle,
 } from 'phosphor-react-native'
@@ -24,21 +26,28 @@ function AppRoutes() {
       screenOptions={({ navigation }) => {
         return {
           headerShown: true,
+          headerStyle: {
+            height: 0,
+          },
+          headerTitleStyle: {
+            display: 'none',
+          },
           headerLeft: () => null,
           drawerPosition: 'right',
           headerRight: () => {
             return (
               <Button
+                top={6}
+                position={'absolute'}
                 variant={'unstyled'}
                 onPress={() => navigation.toggleDrawer()}
+                right={0}
+                pr={6}
+                roundedLeft={4}
+                bg={'gray.700'}
+                roundedRight={0}
               >
-                <Image
-                  alt={'menu icon'}
-                  style={{
-                    transform: [{ rotateY: '180deg' }],
-                  }}
-                  source={menuIcon}
-                />
+                <Icon as={List} color={'white'} />
               </Button>
             )
           },
@@ -50,7 +59,6 @@ function AppRoutes() {
           },
           drawerActiveTintColor: theme.colors.red['200'],
           headerTransparent: true,
-          headerTitle: '',
         }
       }}
     >

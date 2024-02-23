@@ -1,5 +1,5 @@
 import React from 'react'
-import { Divider, HStack, VStack } from 'native-base'
+import { Divider, Icon, VStack } from 'native-base'
 import { AnimatedHStack, AnimatedVstack } from '../../AnimatedComponents'
 import {
   FadeInDown,
@@ -15,6 +15,9 @@ import GameBackground from './gameBackground'
 
 import WishListButton from './rating/wishListButton'
 import { StarsRating } from './rating/starsRating'
+import { MagnifyingGlass } from 'phosphor-react-native'
+import Button from '../../Button'
+import Arrows from '../../arrows'
 
 function Header() {
   const opcty = useSharedValue(0)
@@ -48,7 +51,7 @@ function Header() {
         }}
         flex={1}
         px={8}
-        pt={'56'}
+        pt={360}
       >
         <GameDescription />
         <Controls />
@@ -66,6 +69,7 @@ function Header() {
             </>
           ) : null}
         </AnimatedHStack>
+        <Arrows />
       </AnimatedVstack>
     </VStack>
   )

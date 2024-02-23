@@ -14,12 +14,12 @@ import { FadeInDown } from 'react-native-reanimated'
 import { getRatedGames } from '../utilities/api/getRatedGames'
 
 function Catalogue() {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
   const { theme, userToken, showToast } = React.useContext(GlobalContext)
   const [rated, setRated] = React.useState<IRatedData>({
     games: [],
     page: 0,
   })
-  const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
   async function handleRatedGames(page: number) {
     try {

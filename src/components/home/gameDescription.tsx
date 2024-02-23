@@ -16,7 +16,7 @@ function GameDescription() {
   })
 
   return (
-    <VStack mb={4}>
+    <VStack>
       <Text
         pl={2}
         numberOfLines={2}

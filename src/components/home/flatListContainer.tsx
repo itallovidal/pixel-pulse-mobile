@@ -8,6 +8,7 @@ import { EmptyComment } from './commentary/emptyComment'
 import { IComment } from '../../@types/game'
 import Loading from '../Loading'
 import { FadeInUp } from 'react-native-reanimated'
+import Arrows from '../arrows'
 
 function FlatListContainer() {
   const {
@@ -52,7 +53,6 @@ function FlatListContainer() {
           return <Comment data={item as IComment} opcty={showCommentBox} />
         }}
       />
-
       {showCommentBox && !isReviewLoading ? <CommentBox /> : null}
     </AnimatedVstack>
   )

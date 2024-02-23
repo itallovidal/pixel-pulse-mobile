@@ -24,7 +24,7 @@ function AddToWishListButton() {
     showToast({
       bg: 'green.700',
       placement: 'top',
-      title: 'Game adicionado à sua playlist!',
+      title: 'Game adicionado à sua lista de interesses!',
     })
   }
 

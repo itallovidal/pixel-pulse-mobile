@@ -44,7 +44,7 @@ function RemoveFromWishListButton() {
           color={'red.600'}
         />
 
-        <Text color={'white'}> Adicionado à lista de interesses!</Text>
+        <Text color={'white'}> Retirar da lista de interesses</Text>
       </HStack>
     </Button>
   )

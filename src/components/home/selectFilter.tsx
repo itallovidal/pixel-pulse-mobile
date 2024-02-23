@@ -15,6 +15,7 @@ function SelectFilter() {
     <SelectDropdown
       data={[`Discover`, `Meus Gêneros`]}
       buttonStyle={{
+        height: '100%',
         backgroundColor: theme.colors.gray['600'],
         borderRadius: 4,
         width: 'auto',

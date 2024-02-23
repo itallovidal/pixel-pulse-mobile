@@ -39,7 +39,7 @@ function RatingControls() {
           onPress={() => handleSubmitRating()}
           buttonTheme={'unstyled'}
         >
-          {game.wishList.isListed && 'Retire da Lista'}
+          {game.wishList.isListed && 'Retire da Lista para avaliar'}
           {!game.wishList.isListed && showCommentBox && 'Avaliado com Sucesso!'}
           {!game.wishList.isListed && !showCommentBox && 'Avaliar'}
         </Button>

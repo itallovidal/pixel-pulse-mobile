@@ -37,12 +37,14 @@ function Button({ children, buttonTheme = 'default', ...props }: IMyButton) {
     <AnimatedButton
       bg={styles[buttonTheme].bg}
       layout={FadeIn}
+      {...props}
       _pressed={{
         bgColor: styles[buttonTheme].pressed,
       }}
-      {...props}
     >
-      <Text color={styles[buttonTheme].textColor}>{children}</Text>
+      <Text textAlign={'center'} color={styles[buttonTheme].textColor}>
+        {children}
+      </Text>
     </AnimatedButton>
   )
 }

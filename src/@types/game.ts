@@ -1,4 +1,4 @@
-import { number } from 'zod'
+
 
 export const GENRES = [
   {
@@ -161,12 +161,6 @@ export interface IComment {
   comment: string
   created_at: Date
   user: { name: string; favGenre1: number; favGenre2: number }
-}
-
-export interface IRate {
-  gameID: number
-  userID: string
-  stars: number
 }
 
 export interface IRatedGame {
