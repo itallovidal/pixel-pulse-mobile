@@ -5,7 +5,7 @@ import { GlobalContext } from '../components/context/globalContextProvider'
 import { IRatedData, IRatedGame } from '../@types/game'
 import { useFocusEffect } from '@react-navigation/native'
 import Loading from '../components/Loading'
-import { WishCard } from '../components/wishList/wishCard'
+import { Card } from '../components/card'
 import TextHeader from '../components/textHeader'
 import { getWishedGames } from '../utilities/api/getWishedGames'
 import { EmptyWishList } from '../components/wishList/emptyWishList'
@@ -83,7 +83,7 @@ export function WishList() {
             return item.id.toString()
           }}
           renderItem={({ item, index }) => (
-            <WishCard game={item as IRatedGame} delay={index * 100} />
+            <Card game={item as IRatedGame} delay={index * 100} />
           )}
         />
       )}

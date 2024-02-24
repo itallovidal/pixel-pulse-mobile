@@ -38,6 +38,10 @@ function Header() {
     if (homeRouteParams.isWishListed) {
       updateGame(filter, homeRouteParams.gameID, 'isWished')
     }
+
+    if (homeRouteParams.isSearched) {
+      updateGame(filter, homeRouteParams.gameID, 'isWished')
+    }
   }, [homeRouteParams])
 
   opcty.value = isReviewLoading ? withSpring(0.4) : withSpring(1)

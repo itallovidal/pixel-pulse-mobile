@@ -1,5 +1,3 @@
-
-
 export const GENRES = [
   {
     id: 4,
@@ -183,4 +181,13 @@ export interface IRatedGame {
 export interface IRatedData {
   games: IRatedGame[]
   page: number
+}
+
+export interface IGameCard {
+  id: number
+  cover: {
+    id: number
+    url: string
+  }
+  name: string
 }

@@ -12,6 +12,8 @@ import { submitComment } from '../../utilities/api/submitComment'
 import { postRating } from '../../utilities/api/submitRating'
 import { useRoute } from '@react-navigation/native'
 import { submitUpdatedRating } from '../../utilities/api/submitUpdatedRating'
+import { addToWishPlay } from '../../utilities/api/addToWishPlay'
+import { removeFromWishPlay } from '../../utilities/api/removeFromWishPlay'
 
 interface IReviewContext {
   state: IReviewReducerState
@@ -22,15 +24,24 @@ interface IReviewContext {
   updateGame: (
     filter: `discover` | `forme`,
     gameID?: number,
-    state?: 'isEditing' | 'isWished',
+    state?: 'isEditing' | 'isWished' | 'isSearched',
   ) => Promise<void>
   handleSubmitComment: ({ text }: IPostCommentSchema) => Promise<void>
   handleSubmitRating: () => Promise<void>
   homeRouteParams:
     | undefined
-    | { id: string; isEditing: boolean; isWishListed: boolean; gameID: number }
+    | {
+        id: string
+        isEditing: boolean
+        isWishListed: boolean
+        gameID: number
+        isSearched: boolean
+      }
   handleUpdatedRating: () => Promise<void>
-  handleUpdateWishList: (payload: { isListed: boolean; id: string }) => void
+  handleUpdateWishList: (
+    action: 'add' | 'remove',
+    id: number | string,
+  ) => Promise<void>
 }
 //
 export const ReviewContext = React.createContext({} as IReviewContext)
@@ -43,6 +54,7 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     isEditing: boolean
     isWishListed: boolean
     gameID: number
+    isSearched: boolean
   }
 
   const [state, dispatch] = React.useReducer(reviewContextReducer, {
@@ -77,14 +89,40 @@ export function ReviewContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function handleUpdateWishList(payload: { isListed: boolean; id: string }) {
-    dispatch({ type: 'SET_WISHLIST_INFO', payload })
+  async function handleUpdateWishList(
+    action: 'add' | 'remove',
+    id: number | string,
+  ) {
+    try {
+      setIsReviewLoading(true)
+
+      if (action === 'add' && typeof id === 'number') {
+        const payload = await addToWishPlay(userToken!.accessToken, id)
+        dispatch({ type: 'SET_WISHLIST_INFO', payload })
+        return
+      }
+
+      if (action === 'remove' && typeof id === 'string') {
+        await removeFromWishPlay(userToken!.accessToken, id)
+        dispatch({
+          type: 'SET_WISHLIST_INFO',
+          payload: {
+            isListed: false,
+            id: '',
+          },
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setIsReviewLoading(false)
+    }
   }
 
   async function updateGame(
     filter: `discover` | `forme`,
     gameID?: number,
-    state?: 'isEditing' | 'isWished',
+    state?: 'isEditing' | 'isWished' | 'isSearched',
   ) {
     try {
       setIsReviewLoading(true)

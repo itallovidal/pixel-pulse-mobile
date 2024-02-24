@@ -1,25 +1,50 @@
 import React from 'react'
-import { IRatedGame } from '../../@types/game'
+import { IGameCard, IRatedGame } from '../@types/game'
 import { Image, Pressable, Text, VStack } from 'native-base'
-import { AnimatedVstack } from '../AnimatedComponents'
+import { AnimatedVstack } from './AnimatedComponents'
 import { FadeIn } from 'react-native-reanimated'
-import { GlobalContext } from '../context/globalContextProvider'
+import { GlobalContext } from './context/globalContextProvider'
 
-export function WishCard({ game, delay }: { game: IRatedGame; delay: number }) {
+function isIRatedCard(game: unknown): game is IRatedGame {
+  if (!(typeof game === 'object')) return false
+  if (game === null) return false
+  return 'gameID' in game
+}
+
+export function Card({
+  game,
+  delay,
+}: {
+  game: IRatedGame | IGameCard
+  delay: number
+}) {
   const {
     navigation: { navigate },
   } = React.useContext(GlobalContext)
 
+  function checkTypeOfGame() {
+    if (isIRatedCard(game))
+      return navigate(`home`, {
+        id: game.id,
+        gameID: game.gameID,
+        isEditing: false,
+        isWishListed: true,
+        isSearched: false,
+      })
+    else {
+      return navigate(`home`, {
+        id: '',
+        gameID: game.id,
+        isEditing: false,
+        isWishListed: false,
+        isSearched: true,
+      })
+    }
+  }
+
   return (
     <Pressable
-      onPress={() =>
-        navigate(`home`, {
-          id: game.id,
-          gameID: game.gameID,
-          isEditing: false,
-          isWishListed: true,
-        })
-      }
+      onPress={() => checkTypeOfGame()}
       _pressed={{
         opacity: 0.45,
       }}

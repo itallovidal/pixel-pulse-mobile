@@ -48,6 +48,7 @@ function RatedCard({ game, delay }: { game: IRatedGame; delay: number }) {
           gameID: game.gameID,
           isEditing: true,
           isWishListed: false,
+          isSearched: false,
         })
       }
       _pressed={{

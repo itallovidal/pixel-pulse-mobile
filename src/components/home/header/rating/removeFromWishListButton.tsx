@@ -4,22 +4,15 @@ import { GameController } from 'phosphor-react-native'
 import { removeFromWishPlay } from '../../../../utilities/api/removeFromWishPlay'
 import { GlobalContext } from '../../../context/globalContextProvider'
 import { ReviewContext } from '../../../context/ReviewContext'
-import { AnimatedButton } from '../../../AnimatedComponents'
-import { FadeInDown, FadeInUp, SlideInUp } from 'react-native-reanimated'
 
 function RemoveFromWishListButton() {
-  const { userToken, showToast } = React.useContext(GlobalContext)
+  const { showToast } = React.useContext(GlobalContext)
   const {
     state: { rating, game },
     handleUpdateWishList,
   } = React.useContext(ReviewContext)
   async function handleRemoveFromWishList() {
-    await removeFromWishPlay(userToken!.accessToken, game.wishList.id)
-
-    handleUpdateWishList({
-      isListed: false,
-      id: '',
-    })
+    await handleUpdateWishList('remove', game.wishList.id)
     showToast({
       bg: 'green.700',
       placement: 'top',

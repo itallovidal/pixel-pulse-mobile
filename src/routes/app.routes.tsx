@@ -16,6 +16,7 @@ import {
   Person,
   UserCircle,
 } from 'phosphor-react-native'
+import { Search } from '../screens/search'
 
 const { Navigator, Screen } = createDrawerNavigator<IAPPRoute>()
 function AppRoutes() {
@@ -95,6 +96,19 @@ function AppRoutes() {
         }}
         name={'wishList'}
         component={WishList}
+      />
+      <Screen
+        options={{
+          drawerLabel: ``,
+          drawerItemStyle: {
+            display: 'none',
+            padding: 0,
+            margin: 0,
+          },
+          drawerIcon: () => null,
+        }}
+        name={'search'}
+        component={Search}
       />
     </Navigator>
   )

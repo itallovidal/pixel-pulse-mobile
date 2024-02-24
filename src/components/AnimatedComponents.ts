@@ -1,6 +1,7 @@
 import Animated from 'react-native-reanimated'
 import {
   VStack,
+  Icon,
   Text,
   ScrollView,
   Input,
@@ -9,12 +10,18 @@ import {
   FlatList,
   View,
   Button,
-  Pressable,
+  Pressable, Box,
 } from 'native-base'
 import { ImageBackground } from 'react-native'
+
 export const AnimatedVstack = Animated.createAnimatedComponent(VStack)
+// export const AnimatedIcon = Animated.createAnimatedComponent(
+//   ,
+// )
+
 export const AnimatedText = Animated.createAnimatedComponent(Text)
 export const AnimatedCenter = Animated.createAnimatedComponent(Center)
+export const AnimatedBox = Animated.createAnimatedComponent(Box)
 export const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground)
 export const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView)

@@ -4,28 +4,25 @@ import { GameController } from 'phosphor-react-native'
 import { GlobalContext } from '../../../context/globalContextProvider'
 import { ReviewContext } from '../../../context/ReviewContext'
 import { addToWishPlay } from '../../../../utilities/api/addToWishPlay'
-import { removeFromWishPlay } from '../../../../utilities/api/removeFromWishPlay'
 
 function AddToWishListButton() {
-  const { userToken, showToast } = React.useContext(GlobalContext)
+  const { showToast } = React.useContext(GlobalContext)
   const {
     state: { rating, game },
     handleUpdateWishList,
   } = React.useContext(ReviewContext)
 
   async function handleAddToWishList() {
-    const wishListInfo = await addToWishPlay(
-      userToken!.accessToken,
-      game.info.id,
-    )
-
-    handleUpdateWishList(wishListInfo)
-
-    showToast({
-      bg: 'green.700',
-      placement: 'top',
-      title: 'Game adicionado à sua lista de interesses!',
-    })
+    try {
+      await handleUpdateWishList('add', game.info.id)
+      showToast({
+        bg: 'green.700',
+        placement: 'top',
+        title: 'Game adicionado à sua lista de interesses!',
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (

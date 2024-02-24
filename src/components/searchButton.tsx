@@ -1,4 +1,4 @@
-import { Box, HStack, Icon, Input, TextArea } from 'native-base'
+import { HStack, Icon } from 'native-base'
 import { MagnifyingGlass } from 'phosphor-react-native'
 import Button from './Button'
 import React from 'react'
@@ -7,10 +7,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AnimatedInput } from './AnimatedComponents'
 import { Layout } from 'react-native-reanimated'
-import { TextInput } from 'react-native'
+import { Keyboard, TextInput } from 'react-native'
 import { ISearchSchema, searchSchema } from '../schemas/searchSchema'
+import { GlobalContext } from './context/globalContextProvider'
 
 export function SearchButton() {
+  const {
+    navigation: { navigate },
+  } = React.useContext(GlobalContext)
   const {
     control,
     handleSubmit,
@@ -20,11 +24,13 @@ export function SearchButton() {
   })
   const [isOpen, setIsOpen] = React.useState(false)
   const inputRef = React.useRef<TextInput>(null)
-
   isOpen && inputRef.current && inputRef.current.focus()
+  Keyboard.addListener('keyboardDidHide', () => setIsOpen(false))
 
   function handleSubmitSearch({ text }: ISearchSchema) {
-    console.log(text)
+    navigate('search', {
+      q: text,
+    })
   }
 
   return (
